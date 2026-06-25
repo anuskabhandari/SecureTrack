@@ -1,5 +1,5 @@
 import pytest
-from vulnerabilities.models import Vulnerability
+from backend.vulnerabilities.models import Vulnerability
 
 @pytest.mark.django_db
 def test_create_vulnerability():
