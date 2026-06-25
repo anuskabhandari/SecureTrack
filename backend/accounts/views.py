@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib.auth import logout as django_logout
 
 @api_view(['POST'])
 def register(request):
@@ -26,3 +27,9 @@ def login(request):
     if user:
         return Response({"message": "Login success"})
     return Response({"message": "Invalid credentials"})
+
+
+@api_view(['POST'])
+def logout(request):
+    django_logout(request)
+    return Response({"message": "Logout successful"})

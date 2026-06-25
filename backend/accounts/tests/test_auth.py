@@ -2,6 +2,18 @@ import pytest
 from django.test import Client
 
 @pytest.mark.django_db
+def test_register():
+    client = Client()
+
+    response = client.post("/api/register/", {
+        "username": "rekha",
+        "email": "rekha@test.com",
+        "password": "123"
+    })
+
+    assert response.status_code == 200
+
+@pytest.mark.django_db
 def test_login():
     client = Client()
 
@@ -39,3 +51,10 @@ def test_dummy_users():
         assert response.status_code == 200
 
     assert len(DUMMY_USERS) == 5
+
+@pytest.mark.django_db
+def test_logout():
+    client = Client()
+
+    response = client.post("/api/logout/")
+    assert response.status_code == 200    
