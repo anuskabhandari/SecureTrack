@@ -1,35 +1,56 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.contrib.auth import logout as django_logout
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.contrib.auth import logout as django_logout
+
+from .serializers import RegisterSerializer
+
 
 @api_view(['POST'])
 def register(request):
-    User.objects.create_user(
-        username=request.data['username'],
-        email=request.data['email'],
-        password=request.data['password']
-    )
-    return Response({"message": "User registered"})
 
-from django.contrib.auth import authenticate
+    serializer = RegisterSerializer(data=request.data)
+
+    if serializer.is_valid():
+
+        User.objects.create_user(
+            username=serializer.validated_data['username'],
+            email=serializer.validated_data['email'],
+            password=serializer.validated_data['password']
+        )
+
+        return Response({
+            "message": "User registered successfully"
+        })
+
+    return Response(serializer.errors, status=400)
+
 
 @api_view(['POST'])
 def login(request):
+
     user = authenticate(
-        username=request.data['username'],
-        password=request.data['password']
+        username=request.data.get('username'),
+        password=request.data.get('password')
     )
 
     if user:
-        return Response({"message": "Login success"})
-    return Response({"message": "Invalid credentials"})
+        return Response({
+            "message": "Login success"
+        })
+
+    return Response({
+        "message": "Invalid credentials"
+    }, status=400)
 
 
 @api_view(['POST'])
 def logout(request):
+
     django_logout(request)
-    return Response({"message": "Logout successful"})
+
+    return Response({
+        "message": "Logout successful"
+    })
