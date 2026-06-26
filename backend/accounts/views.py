@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from .models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as django_logout
 
@@ -14,11 +14,11 @@ def register(request):
     serializer = RegisterSerializer(data=request.data)
 
     if serializer.is_valid():
-
         User.objects.create_user(
             username=serializer.validated_data['username'],
             email=serializer.validated_data['email'],
-            password=serializer.validated_data['password']
+            password=serializer.validated_data['password'],
+            role=serializer.validated_data['role']
         )
 
         return Response({
@@ -38,7 +38,8 @@ def login(request):
 
     if user:
         return Response({
-            "message": "Login success"
+            "message": "Login success",
+            "role": user.role
         })
 
     return Response({

@@ -5,6 +5,9 @@ class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+    role = serializers.ChoiceField(
+        choices=['Developer', 'User']
+    )
 
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
