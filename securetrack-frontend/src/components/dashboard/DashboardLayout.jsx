@@ -17,7 +17,7 @@ export default function DashboardLayout({
 
             <div className="main-content">
 
-                <Topbar role={role} />
+                <Topbar/>
 
                 <div className="content">
 

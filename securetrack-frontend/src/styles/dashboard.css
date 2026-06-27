@@ -448,3 +448,212 @@ border-radius:18px;
 box-shadow:0 10px 25px rgba(0,0,0,.05);
 
 }
+
+.avatar{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-right:12px;
+
+}
+
+.user{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.user strong{
+
+    font-size:15px;
+
+}
+
+.user small{
+
+    color:#64748b;
+
+}
+
+.theme-btn{
+
+    width:45px;
+
+    height:45px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.theme-btn:hover{
+
+    transform:translateY(-3px);
+
+    background:#2563eb;
+
+    color:white;
+
+}
+.notification{
+
+    width:45px;
+
+    height:45px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.notification:hover{
+
+    transform:translateY(-3px);
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+body.dark-theme{
+
+    background:#0f172a;
+
+    color:#fff;
+
+}
+
+body.dark-theme .sidebar{
+
+    background:#111827;
+
+}
+
+body.dark-theme .topbar{
+
+    background:#1e293b;
+
+}
+
+body.dark-theme .main-content{
+
+    background:#0f172a;
+
+}
+
+body.dark-theme .stat-card{
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+body.dark-theme .table-card{
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+body.dark-theme .chart-card{
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+body.dark-theme input{
+
+    background:#334155;
+
+    color:white;
+
+    border:none;
+
+}
+
+body.dark-theme table{
+
+    color:white;
+
+}
+
+body.dark-theme th{
+
+    background:#334155;
+
+}
+
+body.dark-theme td{
+
+    border-color:#475569;
+
+}
+
+body.dark-theme .notification,
+
+body.dark-theme .theme-btn{
+
+    background:#334155;
+
+    color:white;
+
+}
+
+body.dark-theme .sidebar a{
+
+    color:white;
+
+}
+
+body.dark-theme .logout-btn{
+
+    background:#dc2626;
+
+}

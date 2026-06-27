@@ -1,6 +1,40 @@
-export default function Topbar({ role }) {
+import { useEffect, useState } from "react";
 
-    const date = new Date().toLocaleDateString();
+export default function Topbar() {
+
+    const username = localStorage.getItem("username") || "User";
+    const role = localStorage.getItem("role") || "User";
+
+    const [darkMode, setDarkMode] = useState(
+        localStorage.getItem("darkMode") === "true"
+    );
+
+    useEffect(() => {
+
+        if (darkMode) {
+            document.body.classList.add("dark-theme");
+        } else {
+            document.body.classList.remove("dark-theme");
+        }
+
+    }, [darkMode]);
+
+    const toggleDarkMode = () => {
+
+        const newMode = !darkMode;
+
+        setDarkMode(newMode);
+
+        localStorage.setItem("darkMode", newMode);
+
+    };
+
+    const date = new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
 
     return (
 
@@ -8,9 +42,13 @@ export default function Topbar({ role }) {
 
             <div>
 
-                <h2>Dashboard</h2>
+                <h2>
+                    Welcome back, {username} 👋
+                </h2>
 
-                <small>{date}</small>
+                <small>
+                    {role} • {date}
+                </small>
 
             </div>
 
@@ -18,8 +56,15 @@ export default function Topbar({ role }) {
 
                 <input
                     type="text"
-                    placeholder="Search vulnerabilities..."
+                    placeholder="Search..."
                 />
+
+                <button
+                    className="theme-btn"
+                    onClick={toggleDarkMode}
+                >
+                    {darkMode ? "☀️" : "🌙"}
+                </button>
 
                 <button className="notification">
 
@@ -29,7 +74,21 @@ export default function Topbar({ role }) {
 
                 <div className="user">
 
-                    👤 {role}
+                    <div className="avatar">
+
+                        {username.charAt(0).toUpperCase()}
+
+                    </div>
+
+                    <div>
+
+                        <strong>{username}</strong>
+
+                        <br />
+
+                        <small>{role}</small>
+
+                    </div>
 
                 </div>
 
