@@ -30,18 +30,18 @@ export default function Login() {
       setTimeout(() => {
 
         if (response.data.role === "Admin") {
-          navigate("/admin-dashboard");
+          window.location.href = "/admin-dashboard";
          }
 
         else if (response.data.role === "Developer") {
-          navigate("/developer-dashboard");
+          window.location.href = "/developer-dashboard";
          }
 
         else {
-          navigate("/user-dashboard");
+          window.location.href = "/user-dashboard";
          }
 
-      }, 1500);
+      }, 1000);
 
     } catch (error) {
       setSuccess(false);

@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import DeveloperDashboard from "./pages/DeveloperDashboard";
 import UserDashboard from "./pages/UserDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -22,19 +23,30 @@ function App() {
 
         <Route
           path="/admin-dashboard"
-          element={<AdminDashboard />}
+          element={
+              <ProtectedRoute allowedRole="Admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+          }
         />
 
         <Route
-          path="/developer-dashboard"
-          element={<DeveloperDashboard />}
+           path="/developer-dashboard"
+           element={
+              <ProtectedRoute allowedRole="Developer">
+                <DeveloperDashboard />
+              </ProtectedRoute>
+           }
         />
 
         <Route
-          path="/user-dashboard"
-          element={<UserDashboard />}
+           path="/user-dashboard"
+           element={
+              <ProtectedRoute allowedRole="User">
+                 <UserDashboard />
+              </ProtectedRoute>
+           }
         />
-
       </Routes>
 
     </BrowserRouter>

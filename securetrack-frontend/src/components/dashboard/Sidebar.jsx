@@ -6,7 +6,9 @@ export default function Sidebar({ role }) {
 
     const logout = () => {
 
-        localStorage.clear();
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("role");
+        localStorage.removeItem("username");
         navigate("/login");
 
     };
