@@ -1,7 +1,6 @@
 from django.db import models
-
-# Create your models here.
 from django.conf import settings
+
 
 class Vulnerability(models.Model):
 
@@ -21,6 +20,16 @@ class Vulnerability(models.Model):
     title = models.CharField(max_length=200)
 
     description = models.TextField()
+
+    category = models.CharField(max_length=100)
+
+    cve_id = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+
+    affected_asset = models.CharField(max_length=200)
 
     severity = models.CharField(
         max_length=20,
