@@ -49,7 +49,7 @@ def test_login():
     )
 
     assert response.status_code == 200
-    assert response.json()["message"] == "Login success"
+    assert response.json()["message"] == "Login successful"
 
 
 DUMMY_USERS = [
@@ -106,11 +106,24 @@ def test_dummy_users():
 def test_logout():
     client = Client()
 
+    register_user(client)
+
+    login_response = client.post(
+        LOGIN_URL,
+        {
+            "username": "rekha",
+            "password": "StrongPassword123",
+        },
+    )
+
+    token = login_response.json()["access"]
+
+    client.defaults["HTTP_AUTHORIZATION"] = f"Bearer {token}"
+
     response = client.post(LOGOUT_URL)
 
     assert response.status_code == 200
     assert response.json()["message"] == "Logout successful"
-
 
 @pytest.mark.django_db
 def test_login_invalid_password():
