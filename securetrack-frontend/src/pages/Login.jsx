@@ -23,25 +23,38 @@ export default function Login() {
       setSuccess(true);
       setMessage(response.data.message);
 
-      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("access", response.data.access);
+
+      localStorage.setItem("refresh", response.data.refresh);
+
       localStorage.setItem("role", response.data.role);
+
       localStorage.setItem("username", response.data.username);
 
+      localStorage.setItem("isLoggedIn", "true");
       setTimeout(() => {
 
-        if (response.data.role === "Admin") {
-          window.location.href = "/admin-dashboard";
+         if (response.data.role === "Admin") {
+
+             navigate("/admin-dashboard");
+
          }
 
-        else if (response.data.role === "Developer") {
-          window.location.href = "/developer-dashboard";
+         else if (response.data.role === "Developer") {
+
+            navigate("/developer-dashboard");
+
          }
 
-        else {
-          window.location.href = "/user-dashboard";
+         else {
+
+           navigate("/user-dashboard");
+
          }
 
       }, 1000);
+
+
 
     } catch (error) {
       setSuccess(false);

@@ -27,7 +27,7 @@ export default function Sidebar({ role }) {
 
                 <li><Link to="#">🏠 Dashboard</Link></li>
 
-                <li><Link to="#">🛡 Vulnerabilities</Link></li>
+                <li><Link to="/vulnerabilities">🛡 Vulnerabilities</Link></li>
 
                 <li><Link to="#">🚨 Incidents</Link></li>
 

@@ -1,14 +1,18 @@
 from .models import User
 from django.contrib.auth import authenticate
-from django.contrib.auth import logout as django_logout
 
+from django.contrib.auth import logout as django_logout
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .serializers import RegisterSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
 
     serializer = RegisterSerializer(data=request.data)
@@ -27,8 +31,8 @@ def register(request):
 
     return Response(serializer.errors, status=400)
 
-
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login(request):
 
     user = authenticate(
@@ -37,13 +41,22 @@ def login(request):
     )
 
     if user:
+        refresh = RefreshToken.for_user(user)
 
         role = "Admin" if user.is_superuser else user.role
 
         return Response({
-            "message": "Login success",
+
+            "access": str(refresh.access_token),
+
+            "refresh": str(refresh),
+
             "role": role,
-            "username": user.username
+
+            "username": user.username,
+
+            "message": "Login successful"
+
         })
 
     return Response({
