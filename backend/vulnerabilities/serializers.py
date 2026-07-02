@@ -4,16 +4,42 @@ from .models import Vulnerability
 
 class VulnerabilitySerializer(serializers.ModelSerializer):
 
+    assigned_to_name = serializers.CharField(
+        source="assigned_to.username",
+        read_only=True
+    )
+
+    reported_by_name = serializers.CharField(
+        source="reported_by.username",
+        read_only=True
+    )
+
     class Meta:
         model = Vulnerability
-        fields = "__all__"
+        fields = [
+            "id",
+            "title",
+            "description",
+            "category",
+            "affected_asset",
+            "severity",
+            "status",
+            "reported_by",
+            "reported_by_name",
+            "assigned_to",
+            "assigned_to_name",
+            "created_at",
+            "updated_at",
+        ]
 
         read_only_fields = (
             "id",
+            "reported_by",
+            "reported_by_name",
+            "assigned_to_name",
             "created_at",
             "updated_at",
         )
-
     def validate(self, attrs):
 
         # Only validate during update

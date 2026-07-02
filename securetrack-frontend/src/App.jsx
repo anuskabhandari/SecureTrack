@@ -10,6 +10,8 @@ import UserDashboard from "./pages/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Vulnerabilities from "./pages/Vulnerabilities";
 import VulnerabilityManagement from "./pages/VulnerabilityManagement";
+import DeveloperVulnerabilities from "./pages/DeveloperVulnerabilities";
+import UserVulnerabilities from "./pages/UserVulnerabilities";
 
 function App() {
   return (
@@ -50,15 +52,36 @@ function App() {
            }
         />
 
+
         <Route
           path="/vulnerabilities"
-          element={<Vulnerabilities />}
+          element={
+             <ProtectedRoute allowedRole="Admin">
+                <VulnerabilityManagement />
+             </ProtectedRoute>
+          }
         />
-        <Route
-           path="/vulnerabilities"
-           element={<VulnerabilityManagement />}
-        />
+
+      <Route
+          path="/developer/vulnerabilities"
+          element={
+              <ProtectedRoute allowedRole="Developer">
+                   <DeveloperVulnerabilities />
+              </ProtectedRoute>
+          }
+      />
+      <Route
+          path="/user/vulnerabilities"
+          element={
+             <ProtectedRoute allowedRole="User">
+                 <UserVulnerabilities />
+             </ProtectedRoute>
+          }
+      />
+
+
       </Routes>
+
 
     </BrowserRouter>
   );
