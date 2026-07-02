@@ -25,9 +25,47 @@ export default function Sidebar({ role }) {
 
             <ul>
 
-                <li><Link to="#">🏠 Dashboard</Link></li>
+                {role === "Admin" && (
+                  <li>
+                    <Link to="/admin-dashboard">🏠 Dashboard</Link>
+                  </li>
+                )}
 
-                <li><Link to="/vulnerabilities">🛡 Vulnerabilities</Link></li>
+                {role === "Developer" && (
+                    <li>
+                        <Link to="/developer-dashboard">🏠 Dashboard</Link>
+                    </li>
+                )}
+
+                {role === "User" && (
+                  <li>
+                     <Link to="/user-dashboard">🏠 Dashboard</Link>
+                  </li>
+                )}
+
+                {role === "Admin" && (
+                   <li>
+                    <Link to="/vulnerabilities">
+                        🛡 Vulnerabilities
+                    </Link>
+                   </li>
+                )}
+
+                {role === "Developer" && (
+                   <li>
+                       <Link to="/developer/vulnerabilities">
+                           🛠 My Assigned Vulnerabilities
+                       </Link>
+                   </li>
+                )}
+
+                {role === "User" && (
+                  <li>
+                      <Link to="/user/vulnerabilities">
+                         📄 My Reported Vulnerabilities
+                      </Link>
+                 </li>
+                )}
 
                 <li><Link to="#">🚨 Incidents</Link></li>
 
@@ -50,8 +88,6 @@ export default function Sidebar({ role }) {
                 {role === "User" && (
                     <>
                         <li><Link to="#">➕ Report Issue</Link></li>
-                        <li><Link to="#">📑 My Reports</Link></li>
-                    </>
                 )}
 
             </ul>
