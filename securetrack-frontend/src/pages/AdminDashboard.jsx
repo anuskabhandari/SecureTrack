@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import StatCard from "../components/dashboard/StatCard";
 import DashboardChart from "../components/dashboard/DashboardChart";
 import "../styles/dashboard.css";
 export default function AdminDashboard() {
-
+    const navigate = useNavigate();
     return (
 
         <DashboardLayout role="Admin">
@@ -38,7 +40,18 @@ export default function AdminDashboard() {
             <DashboardChart />
             <div className="table-card">
 
-                <h3>Recent Activities</h3>
+               <div className="d-flex justify-content-between align-items-center mb-3">
+
+                  <h3>Recent Activities</h3>
+
+                  <button
+                     className="btn btn-primary"
+                     onClick={() => navigate("/vulnerabilities")}
+                  >
+                     Manage Vulnerabilities
+                  </button>
+
+               </div>
 
                 <table>
 

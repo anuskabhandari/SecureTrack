@@ -45,3 +45,12 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
 
         return data
+
+class DeveloperSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+        ]
