@@ -7,9 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .serializers import RegisterSerializer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-
+from .serializers import DeveloperSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -72,3 +73,16 @@ def logout(request):
     return Response({
         "message": "Logout successful"
     })
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def developer_list(request):
+
+    developers = User.objects.filter(role="Developer")
+
+    serializer = DeveloperSerializer(
+        developers,
+        many=True
+    )
+
+    return Response(serializer.data)

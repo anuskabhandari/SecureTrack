@@ -9,6 +9,8 @@ import DeveloperDashboard from "./pages/DeveloperDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Vulnerabilities from "./pages/Vulnerabilities";
+import VulnerabilityManagement from "./pages/VulnerabilityManagement";
+
 function App() {
   return (
     <BrowserRouter>
@@ -51,6 +53,10 @@ function App() {
         <Route
           path="/vulnerabilities"
           element={<Vulnerabilities />}
+        />
+        <Route
+           path="/vulnerabilities"
+           element={<VulnerabilityManagement />}
         />
       </Routes>
 
