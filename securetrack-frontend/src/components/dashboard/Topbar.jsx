@@ -54,10 +54,7 @@ export default function Topbar() {
 
             <div className="top-right">
 
-                <input
-                    type="text"
-                    placeholder="Search..."
-                />
+
 
                 <button
                     className="theme-btn"

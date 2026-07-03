@@ -28,7 +28,22 @@ class VulnerabilityListCreateView(generics.ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
-        serializer.save(reported_by=self.request.user)
+
+        user = self.request.user
+
+        if user.role == "User":
+
+            serializer.save(
+                reported_by=user,
+                assigned_to=None,
+                status="Open"
+            )
+
+        else:
+
+            serializer.save(
+                reported_by=user
+            )
 
 class VulnerabilityDetailView(generics.RetrieveUpdateDestroyAPIView):
 
