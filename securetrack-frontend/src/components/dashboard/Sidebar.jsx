@@ -86,8 +86,8 @@ export default function Sidebar({ role }) {
                 )}
 
                 {role === "User" && (
-                    <>
-                        <li><Link to="#">➕ Report Issue</Link></li>
+                        <li>
+                            <Link to="#">➕ Report Issue</Link></li>
                 )}
 
             </ul>

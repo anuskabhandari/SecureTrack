@@ -12,6 +12,10 @@ export default function DeveloperVulnerabilities() {
 
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedVulnerability, setSelectedVulnerability] = useState(null);
+    const [search, setSearch] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
+    const [severityFilter, setSeverityFilter] = useState("");
+
 
     useEffect(() => {
         loadVulnerabilities();
@@ -45,6 +49,26 @@ export default function DeveloperVulnerabilities() {
         }
 
     };
+    const filteredVulnerabilities = vulnerabilities.filter((v) => {
+
+    const matchesSearch =
+        v.title.toLowerCase().includes(search.toLowerCase()) ||
+        v.category.toLowerCase().includes(search.toLowerCase()) ||
+        v.affected_asset.toLowerCase().includes(search.toLowerCase());
+
+    const matchesStatus =
+        statusFilter === "" || v.status === statusFilter;
+
+    const matchesSeverity =
+        severityFilter === "" || v.severity === severityFilter;
+
+    return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesSeverity
+    );
+
+});
 
     return (
 
@@ -53,6 +77,53 @@ export default function DeveloperVulnerabilities() {
             <h2>My Assigned Vulnerabilities</h2>
 
             <div className="card p-4">
+
+                <div className="row mb-4">
+
+    <div className="col-md-6">
+
+        <input
+            type="text"
+            className="form-control"
+            placeholder="🔍 Search by title, category or asset..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+        />
+
+    </div>
+
+    <div className="col-md-3">
+
+        <select
+            className="form-select"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+        >
+            <option value="">All Status</option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+        </select>
+
+    </div>
+
+    <div className="col-md-3">
+
+        <select
+            className="form-select"
+            value={severityFilter}
+            onChange={(e) => setSeverityFilter(e.target.value)}
+        >
+            <option value="">All Severity</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
+
+    </div>
+
+</div>
 
                 {
 
@@ -65,7 +136,7 @@ export default function DeveloperVulnerabilities() {
                         :
 
                         <VulnerabilityTable
-                            vulnerabilities={vulnerabilities}
+                            vulnerabilities={filteredVulnerabilities}
                             onUpdateStatus={(v) => {
 
                                 setSelectedVulnerability(v);
