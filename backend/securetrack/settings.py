@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'vulnerabilities',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

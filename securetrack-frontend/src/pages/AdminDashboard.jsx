@@ -1,11 +1,73 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import StatCard from "../components/dashboard/StatCard";
 import DashboardChart from "../components/dashboard/DashboardChart";
+
 import "../styles/dashboard.css";
+
 export default function AdminDashboard() {
+
     const navigate = useNavigate();
+
+    const [dashboard, setDashboard] = useState(null);
+
+    useEffect(() => {
+
+        fetchDashboard();
+
+    }, []);
+
+    const fetchDashboard = async () => {
+
+        try {
+
+            const token = localStorage.getItem("access");
+
+            const response = await axios.get(
+
+                "http://127.0.0.1:8000/api/dashboard/admin/",
+
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+
+            );
+
+            setDashboard(response.data);
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    if (!dashboard) {
+
+        return (
+
+            <DashboardLayout role="Admin">
+
+                <div className="text-center mt-5">
+
+                    <div className="spinner-border text-primary"></div>
+
+                </div>
+
+            </DashboardLayout>
+
+        );
+
+    }
+
     return (
 
         <DashboardLayout role="Admin">
@@ -14,46 +76,50 @@ export default function AdminDashboard() {
 
                 <StatCard
                     title="Total Users"
-                    value="125"
+                    value={dashboard.total_users}
                     color="#2563eb"
                 />
 
                 <StatCard
                     title="Vulnerabilities"
-                    value="42"
+                    value={dashboard.total_vulnerabilities}
                     color="#ef4444"
                 />
 
                 <StatCard
-                    title="Open Incidents"
-                    value="13"
+                    title="Open"
+                    value={dashboard.open}
                     color="#f59e0b"
                 />
 
                 <StatCard
                     title="Resolved"
-                    value="29"
+                    value={dashboard.resolved}
                     color="#10b981"
                 />
 
             </div>
-            <DashboardChart />
+
+            <DashboardChart dashboard={dashboard} />
+
             <div className="table-card">
 
-               <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-3">
 
-                  <h3>Recent Activities</h3>
+                    <h3>Recent Vulnerabilities</h3>
 
-                  <button
-                     className="btn btn-primary"
-                     onClick={() => navigate("/vulnerabilities")}
-                  >
-                     Manage Vulnerabilities
-                  </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => navigate("/vulnerabilities")}
+                    >
 
-               </div>
+                        Manage Vulnerabilities
 
-                <table>
+                    </button>
+
+                </div>
+
+                <table className="table table-hover">
 
                     <thead>
 
@@ -61,7 +127,7 @@ export default function AdminDashboard() {
 
                             <th>ID</th>
 
-                            <th>Activity</th>
+                            <th>Title</th>
 
                             <th>Status</th>
 
@@ -71,35 +137,23 @@ export default function AdminDashboard() {
 
                     <tbody>
 
-                        <tr>
+                        {
 
-                            <td>#101</td>
+                            dashboard.recent.map((item) => (
 
-                            <td>SQL Injection</td>
+                                <tr key={item.id}>
 
-                            <td>Critical</td>
+                                    <td>#{item.id}</td>
 
-                        </tr>
+                                    <td>{item.title}</td>
 
-                        <tr>
+                                    <td>{item.status}</td>
 
-                            <td>#102</td>
+                                </tr>
 
-                            <td>XSS</td>
+                            ))
 
-                            <td>Open</td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>#103</td>
-
-                            <td>CSRF</td>
-
-                            <td>Resolved</td>
-
-                        </tr>
+                        }
 
                     </tbody>
 
@@ -108,7 +162,6 @@ export default function AdminDashboard() {
             </div>
 
         </DashboardLayout>
-
 
     );
 

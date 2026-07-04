@@ -7,85 +7,89 @@ import {
     Legend
 } from "recharts";
 
-const data = [
+const COLORS = [
 
-    {name:"Critical",value:15},
+    "#ef4444",
 
-    {name:"High",value:25},
+    "#f59e0b",
 
-    {name:"Medium",value:35},
+    "#3b82f6",
 
-    {name:"Low",value:20}
-
-];
-
-const COLORS=[
-
-"#ef4444",
-
-"#f97316",
-
-"#facc15",
-
-"#22c55e"
+    "#22c55e"
 
 ];
 
-export default function DashboardChart(){
+export default function DashboardChart({ dashboard }) {
 
-return(
+    const data = [
 
-<div className="chart-card">
+        {
+            name: "Critical",
+            value: dashboard.critical
+        },
 
-<h3>Vulnerability Severity</h3>
+        {
+            name: "Open",
+            value: dashboard.open
+        },
 
-<ResponsiveContainer
-width="100%"
-height={320}
->
+        {
+            name: "In Progress",
+            value: dashboard.in_progress
+        },
 
-<PieChart>
+        {
+            name: "Resolved",
+            value: dashboard.resolved
+        }
 
-<Pie
+    ];
 
-data={data}
+    return (
 
-dataKey="value"
+        <div className="chart-card">
 
-outerRadius={120}
+            <h3>Vulnerability Overview</h3>
 
-label
+            <ResponsiveContainer
+                width="100%"
+                height={320}
+            >
 
->
+                <PieChart>
 
-{
+                    <Pie
+                        data={data}
+                        dataKey="value"
+                        outerRadius={120}
+                        label
+                    >
 
-data.map((entry,index)=>(
+                        {
 
-<Cell
+                            data.map((entry, index) => (
 
-key={index}
+                                <Cell
+                                    key={index}
+                                    fill={COLORS[index]}
+                                />
 
-fill={COLORS[index]}
+                            ))
 
-/>
+                        }
 
-))
+                    </Pie>
 
-}
+                    <Tooltip />
 
-</Pie>
+                    <Legend />
 
-<Tooltip/>
+                </PieChart>
 
-<Legend/>
+            </ResponsiveContainer>
 
-</PieChart>
+        </div>
 
-</ResponsiveContainer>
-
-</div>
-
-);
+    );
 
 }

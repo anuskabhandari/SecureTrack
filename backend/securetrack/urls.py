@@ -24,4 +24,8 @@ urlpatterns = [
     "api/vulnerabilities/",
     include("vulnerabilities.urls"),
      ),
+    path(
+    "api/dashboard/",
+    include("dashboard.urls"),
+),
 ]
