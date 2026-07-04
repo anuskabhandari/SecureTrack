@@ -4,11 +4,14 @@ import "../styles/vulnerability.css";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import VulnerabilityTable from "../components/vulnerability/VulnerabilityTable";
 import VulnerabilityForm from "../components/vulnerability/VulnerabilityForm";
+import ViewVulnerabilityModal from "../components/vulnerability/ViewVulnerabilityModal";
 export default function UserVulnerabilities() {
 
     const [vulnerabilities, setVulnerabilities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [selectedViewVulnerability, setSelectedViewVulnerability] = useState(null);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [severityFilter, setSeverityFilter] = useState("");
@@ -208,9 +211,13 @@ export default function UserVulnerabilities() {
 
                         :
 
-                        <VulnerabilityTable
-                            vulnerabilities={vulnerabilities}
-                        />
+                       <VulnerabilityTable
+                           vulnerabilities={filteredVulnerabilities}
+                           onView={(v) => {
+                              setSelectedViewVulnerability(v);
+                              setShowViewModal(true);
+                       }}
+                    />
 
                 }
 
@@ -268,6 +275,23 @@ export default function UserVulnerabilities() {
             </div>
 
         </div>
+
+    )
+}
+{
+    showViewModal && (
+
+        <ViewVulnerabilityModal
+
+            vulnerability={selectedViewVulnerability}
+
+            onClose={() => {
+
+                setShowViewModal(false);
+
+            }}
+
+        />
 
     )
 }

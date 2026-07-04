@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import ViewVulnerabilityModal from "../components/vulnerability/ViewVulnerabilityModal";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import VulnerabilityTable from "../components/vulnerability/VulnerabilityTable";
 import UpdateStatusModal from "../components/vulnerability/UpdateStatusModal";
@@ -10,6 +10,8 @@ export default function DeveloperVulnerabilities() {
     const [vulnerabilities, setVulnerabilities] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [selectedViewVulnerability, setSelectedViewVulnerability] = useState(null);
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedVulnerability, setSelectedVulnerability] = useState(null);
     const [search, setSearch] = useState("");
@@ -143,6 +145,12 @@ export default function DeveloperVulnerabilities() {
                                 setShowStatusModal(true);
 
                             }}
+                            onView={(v) => {
+
+                                setSelectedViewVulnerability(v);
+                                setShowViewModal(true);
+
+                            }}
                         />
 
                 }
@@ -170,6 +178,24 @@ export default function DeveloperVulnerabilities() {
                 />
 
             }
+
+        {
+    showViewModal && (
+
+        <ViewVulnerabilityModal
+
+            vulnerability={selectedViewVulnerability}
+
+            onClose={() => {
+
+                setShowViewModal(false);
+
+            }}
+
+        />
+
+    )
+}
 
         </DashboardLayout>
 
