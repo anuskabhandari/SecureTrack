@@ -97,59 +97,9 @@ export default function UserVulnerabilities() {
             </button>
 
           </div>
-          <div className="stats-grid">
 
-               <div className="stat-card">
 
-                  <h3>{vulnerabilities.length}</h3>
 
-                   <p>Total Reports</p>
-
-               </div>
-
-          <div className="stat-card">
-
-              <h3>
-                {
-                   vulnerabilities.filter(
-                      v => v.status === "Open"
-                   ).length
-                }
-               </h3>
-
-               <p>Open</p>
-
-          </div>
-
-          <div className="stat-card">
-
-            <h3>
-              {
-                vulnerabilities.filter(
-                    v => v.status === "In Progress"
-                ).length
-              }
-            </h3>
-
-            <p>In Progress</p>
-
-          </div>
-
-          <div className="stat-card">
-
-             <h3>
-              {
-                 vulnerabilities.filter(
-                    v => v.status === "Resolved"
-                ).length
-              }
-              </h3>
-
-              <p>Resolved</p>
-
-          </div>
-
-       </div>
        <div className="row mb-4">
 
     <div className="col-md-6">
