@@ -71,7 +71,7 @@ export default function Sidebar({ role }) {
 
                 {role === "Admin" && (
                     <>
-                        <li><Link to="#">👥 Users</Link></li>
+                        <li><Link to="/users">👥 Users</Link></li>
                         <li><Link to="#">📊 Analytics</Link></li>
                         <li><Link to="#">📄 Reports</Link></li>
                         <li><Link to="#">⚙ Settings</Link></li>

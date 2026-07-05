@@ -12,6 +12,7 @@ import Vulnerabilities from "./pages/Vulnerabilities";
 import VulnerabilityManagement from "./pages/VulnerabilityManagement";
 import DeveloperVulnerabilities from "./pages/DeveloperVulnerabilities";
 import UserVulnerabilities from "./pages/UserVulnerabilities";
+import UserManagement from "./pages/UserManagement";
 
 function App() {
   return (
@@ -77,6 +78,11 @@ function App() {
                  <UserVulnerabilities />
              </ProtectedRoute>
           }
+      />
+
+      <Route
+        path="/users"
+        element={<UserManagement />}
       />
 
 
