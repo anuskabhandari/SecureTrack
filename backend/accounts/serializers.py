@@ -54,3 +54,14 @@ class DeveloperSerializer(serializers.ModelSerializer):
             "id",
             "username",
         ]
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "role",
+        ]
