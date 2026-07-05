@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import UserTable from "../components/users/UserTable";
+import ViewUserModal from "../components/users/ViewUserModal";
 
 export default function UserManagement() {
 
@@ -24,6 +26,12 @@ export default function UserManagement() {
     const [search, setSearch] = useState("");
 
     const [roleFilter, setRoleFilter] = useState("");
+    const [showViewModal, setShowViewModal] = useState(false);
+
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const usersPerPage = 5;
 
     useEffect(() => {
         fetchUsers();
@@ -74,6 +82,47 @@ export default function UserManagement() {
     return matchesSearch && matchesRole;
 
 });
+   const deleteUser = async (id) => {
+
+    if (!window.confirm("Delete this user?"))
+        return;
+
+    try {
+
+        const token = localStorage.getItem("access");
+
+        await axios.delete(
+            `http://127.0.0.1:8000/users/${id}/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        toast.success("User deleted successfully");
+
+        fetchUsers();
+
+    } catch (error) {
+
+        toast.error("Failed to delete user");
+
+    }
+
+};
+   const indexOfLast = currentPage * usersPerPage;
+
+const indexOfFirst = indexOfLast - usersPerPage;
+
+const currentUsers = filteredUsers.slice(
+    indexOfFirst,
+    indexOfLast
+);
+
+const totalPages = Math.ceil(
+    filteredUsers.length / usersPerPage
+);
 
     return (
 
@@ -162,13 +211,96 @@ export default function UserManagement() {
                         </div>
 
                         :
-
+                    <>
                         <UserTable
-                            users={filteredUsers}
+                            users={currentUsers}
+                            onDelete={deleteUser}
+                            onView={(user) => {
+                                 setSelectedUser(user);
+
+                                 setShowViewModal(true);
+
+                            }}
                         />
+                        <div className="d-flex justify-content-center mt-4">
+
+    <nav>
+
+        <ul className="pagination">
+
+            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+
+                <button
+                    className="page-link"
+                    onClick={() =>
+                        currentPage > 1 &&
+                        setCurrentPage(currentPage - 1)
+                    }
+                >
+                    Previous
+                </button>
+
+            </li>
+
+            {[...Array(totalPages)].map((_, index) => (
+
+                <li
+                    key={index}
+                    className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                >
+
+                    <button
+                        className="page-link"
+                        onClick={() => setCurrentPage(index + 1)}
+                    >
+                        {index + 1}
+                    </button>
+
+                </li>
+
+            ))}
+
+            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+
+                <button
+                    className="page-link"
+                    onClick={() =>
+                        currentPage < totalPages &&
+                        setCurrentPage(currentPage + 1)
+                    }
+                >
+                    Next
+                </button>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+</div>
+</>
+
                 }
 
             </div>
+            {
+    showViewModal && (
+
+        <ViewUserModal
+
+            user={selectedUser}
+
+            onClose={() => {
+
+                setShowViewModal(false);
+
+            }}
+
+        />
+
+    )
+}
 
         </DashboardLayout>
 
