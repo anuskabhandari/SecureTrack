@@ -28,4 +28,8 @@ urlpatterns = [
     "api/dashboard/",
     include("dashboard.urls"),
 ),
+path(
+    "api/incidents/",
+    include("incidents.urls"),
+),
 ]
