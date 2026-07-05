@@ -106,15 +106,26 @@ def user_list(request):
 @permission_classes([IsAuthenticated])
 def delete_user(request, pk):
 
-    if request.user.role != "Admin" and not request.user.is_superuser:
+    if not request.user.is_superuser:
         return Response(
             {"message": "Permission denied"},
             status=403
         )
 
     try:
+        user = User.objects.get(id=pk)
 
-        user = User.objects.get(pk=pk)
+        if user == request.user:
+            return Response(
+                {"message": "You cannot delete yourself."},
+                status=400
+            )
+
+        user.delete()
+
+        return Response({
+            "message": "User deleted successfully."
+        })
 
     except User.DoesNotExist:
 
@@ -122,16 +133,3 @@ def delete_user(request, pk):
             {"message": "User not found"},
             status=404
         )
-
-    if user == request.user:
-
-        return Response(
-            {"message": "You cannot delete your own account."},
-            status=400
-        )
-
-    user.delete()
-
-    return Response({
-        "message": "User deleted successfully"
-    })

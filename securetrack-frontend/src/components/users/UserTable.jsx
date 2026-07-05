@@ -1,6 +1,9 @@
 import UserRoleBadge from "./UserRoleBadge";
 
-export default function UserTable({ users }) {
+export default function UserTable({ users,
+    onView,
+    onDelete,
+    }) {
 
     return (
 
@@ -15,6 +18,7 @@ export default function UserTable({ users }) {
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th>Actions</th>
 
                     </tr>
 
@@ -28,19 +32,33 @@ export default function UserTable({ users }) {
 
                             <tr key={user.id}>
 
-                                <td>{user.username}</td>
+    <td>{user.username}</td>
 
-                                <td>{user.email || "-"}</td>
+    <td>{user.email}</td>
 
-                                <td>
+    <td>
+        <UserRoleBadge role={user.role} />
+    </td>
 
-                                    <UserRoleBadge
-                                        role={user.role}
-                                    />
+    <td>
 
-                                </td>
+        <button
+            className="btn btn-info btn-sm me-2"
+            onClick={() => onView(user)}
+        >
+            View
+        </button>
 
-                            </tr>
+        <button
+            className="btn btn-danger btn-sm"
+            onClick={() => onDelete(user.id)}
+        >
+            Delete
+        </button>
+
+    </td>
+
+</tr>
 
                         ))
 

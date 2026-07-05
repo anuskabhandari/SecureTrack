@@ -64,4 +64,6 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "role",
+            "date_joined",
+            "is_active",
         ]
