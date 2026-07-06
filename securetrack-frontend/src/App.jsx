@@ -14,6 +14,8 @@ import DeveloperVulnerabilities from "./pages/DeveloperVulnerabilities";
 import UserVulnerabilities from "./pages/UserVulnerabilities";
 import UserManagement from "./pages/UserManagement";
 import AdminIncidents from "./pages/AdminIncidents";
+import DeveloperIncidents from "./pages/DeveloperIncidents";
+import UserIncidents from "./pages/UserIncidents";
 
 function App() {
   return (
@@ -89,6 +91,16 @@ function App() {
         path="/incidents"
         element={<AdminIncidents />}
       />
+
+      <Route
+         path="/developer/incidents"
+         element={<DeveloperIncidents />}
+      />
+
+      <Route
+       path="/user/incidents"
+       element={<UserIncidents />}
+       />
 
 
       </Routes>
