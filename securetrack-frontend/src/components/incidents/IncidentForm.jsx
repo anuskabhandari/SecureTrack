@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function IncidentForm({ onSuccess }) {
+export default function IncidentForm({ incident,onSuccess, }) {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -22,6 +22,23 @@ export default function IncidentForm({ onSuccess }) {
         fetchDevelopers();
 
     }, []);
+    useEffect(() => {
+
+    if (incident) {
+
+        setTitle(incident.title);
+
+        setDescription(incident.description);
+
+        setPriority(incident.priority);
+
+        setVulnerability(incident.vulnerability);
+
+        setAssignedTo(incident.assigned_to || "");
+
+    }
+
+}, [incident]);
 
     const fetchVulnerabilities = async () => {
 
@@ -103,29 +120,70 @@ export default function IncidentForm({ onSuccess }) {
 
             const token = localStorage.getItem("access");
 
-            await axios.post(
-                "http://127.0.0.1:8000/api/incidents/",
-                {
-                    title,
-                    description,
-                    vulnerability,
-                    assigned_to: assignedTo,
-                    priority,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            if (incident) {
 
-            toast.success("Incident created successfully.");
+    await axios.put(
 
-            setTitle("");
-            setDescription("");
-            setPriority("Medium");
-            setAssignedTo("");
-            setVulnerability("");
+        `http://127.0.0.1:8000/api/incidents/${incident.id}/`,
+
+        {
+            title,
+            description,
+            vulnerability,
+            assigned_to: assignedTo,
+            priority,
+            status: incident.status,
+            resolution_notes: incident.resolution_notes,
+        },
+
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+
+    );
+
+    toast.success("Incident updated successfully.");
+
+} else {
+
+    await axios.post(
+
+        "http://127.0.0.1:8000/api/incidents/",
+
+        {
+            title,
+            description,
+            vulnerability,
+            assigned_to: assignedTo,
+            priority,
+        },
+
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+
+    );
+
+    toast.success("Incident created successfully.");
+
+}
+            if (!incident) {
+
+                  setTitle("");
+
+                   setDescription("");
+
+                  setPriority("Medium");
+
+                  setAssignedTo("");
+
+                  setVulnerability("");
+
+            }
 
             onSuccess();
 
@@ -304,13 +362,14 @@ export default function IncidentForm({ onSuccess }) {
 
                     {
 
-                        loading ?
+                        loading
 
-                            "Creating Incident..."
-
-                            :
-
-                            "Create Incident"
+                             ? incident
+                                 ? "Updating Incident..."
+                                 : "Creating Incident..."
+                             : incident
+                                 ? "Update Incident"
+                                 : "Create Incident"
 
                     }
 
