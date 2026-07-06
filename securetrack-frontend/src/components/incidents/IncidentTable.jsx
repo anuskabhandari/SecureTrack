@@ -1,7 +1,10 @@
 import IncidentPriorityBadge from "./IncidentPriorityBadge";
 import IncidentStatusBadge from "./IncidentStatusBadge";
 
-export default function IncidentTable({ incidents }) {
+export default function IncidentTable({ incidents,
+    onView,
+    onEdit,
+    onDelete, }) {
 
     return (
 
@@ -75,15 +78,24 @@ export default function IncidentTable({ incidents }) {
 
                                         <button
                                             className="btn btn-info btn-sm me-2"
+                                            onClick={() => onView(incident)}
                                         >
                                             View
                                         </button>
 
                                         <button
                                             className="btn btn-warning btn-sm"
+                                            onClick={() => onEdit(incident)}
                                         >
                                             Edit
                                         </button>
+
+                                        <button
+                                             className="btn btn-danger btn-sm"
+                                             onClick={() => onDelete(incident)}
+                                    >
+                                        Delete
+                                    </button>
 
                                     </td>
 
