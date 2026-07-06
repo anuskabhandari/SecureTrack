@@ -210,6 +210,7 @@ const [incidentToDelete, setIncidentToDelete] = useState(null);
                         :
 
                         <IncidentTable
+                            role="Admin"
     incidents={filteredIncidents}
 
     onView={(incident) => {

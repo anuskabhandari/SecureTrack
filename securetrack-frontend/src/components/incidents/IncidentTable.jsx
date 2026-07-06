@@ -4,7 +4,9 @@ import IncidentStatusBadge from "./IncidentStatusBadge";
 export default function IncidentTable({ incidents,
     onView,
     onEdit,
-    onDelete, }) {
+    onDelete,
+      role = "Admin",
+      }) {
 
     return (
 
@@ -74,30 +76,55 @@ export default function IncidentTable({ incidents,
 
                                     </td>
 
-                                    <td>
+                                  <td>
 
-                                        <button
-                                            className="btn btn-info btn-sm me-2"
-                                            onClick={() => onView(incident)}
-                                        >
-                                            View
-                                        </button>
+    <button
+        className="btn btn-info btn-sm me-2"
+        onClick={() => onView(incident)}
+    >
+        View
+    </button>
 
-                                        <button
-                                            className="btn btn-warning btn-sm"
-                                            onClick={() => onEdit(incident)}
-                                        >
-                                            Edit
-                                        </button>
+    {
 
-                                        <button
-                                             className="btn btn-danger btn-sm"
-                                             onClick={() => onDelete(incident)}
-                                    >
-                                        Delete
-                                    </button>
+        role === "Admin" && (
 
-                                    </td>
+            <>
+                <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => onEdit(incident)}
+                >
+                    Edit
+                </button>
+
+                <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => onDelete(incident)}
+                >
+                    Delete
+                </button>
+            </>
+
+        )
+
+    }
+
+    {
+
+        role === "Developer" && (
+
+            <button
+                className="btn btn-primary btn-sm"
+                onClick={() => onEdit(incident)}
+            >
+                Update
+            </button>
+
+        )
+
+    }
+
+</td>
 
                                 </tr>
 

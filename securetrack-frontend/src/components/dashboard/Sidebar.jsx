@@ -58,6 +58,13 @@ export default function Sidebar({ role }) {
                        </Link>
                    </li>
                 )}
+                {role === "Developer" && (
+                   <li>
+                      <Link to="/developer/incidents">
+                         🚨 My Incidents
+                      </Link>
+                   </li>
+                )}
 
                 {role === "User" && (
                   <li>
@@ -65,6 +72,15 @@ export default function Sidebar({ role }) {
                          📄 My Reported Vulnerabilities
                       </Link>
                  </li>
+                )}
+
+
+                {role === "User" && (
+                  <li>
+                     <Link to="/user/incidents">
+                        🚨 My Incidents
+                     </Link>
+                  </li>
                 )}
 
                 {role === "Admin" && (

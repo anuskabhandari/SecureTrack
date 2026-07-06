@@ -108,7 +108,26 @@ def incident_detail(request, pk):
 
     if request.method == "GET":
 
-        serializer = IncidentSerializer(incident)
+        if request.user.role == "Admin":
+
+            incidents = Incident.objects.all()
+
+        elif request.user.role == "Developer":
+
+            incidents = Incident.objects.filter(
+                assigned_to=request.user
+            )
+
+        else:
+
+            incidents = Incident.objects.filter(
+                reported_by=request.user
+            )
+
+        serializer = IncidentSerializer(
+            incidents.order_by("-created_at"),
+            many=True
+        )
 
         return Response(serializer.data)
 
