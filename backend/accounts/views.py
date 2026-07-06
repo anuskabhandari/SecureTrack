@@ -18,6 +18,7 @@ def register(request):
 
     if serializer.is_valid():
         User.objects.create_user(
+            full_name=serializer.validated_data["full_name"],
             username=serializer.validated_data['username'],
             email=serializer.validated_data['email'],
             password=serializer.validated_data['password'],

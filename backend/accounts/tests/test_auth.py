@@ -5,17 +5,18 @@ REGISTER_URL = "/api/register/"
 LOGIN_URL = "/api/login/"
 LOGOUT_URL = "/api/logout/"
 
-
 def register_user(
     client,
+    full_name="Rekha Bhandari",
     username="rekha",
     email="rekha@test.com",
-    password="StrongPassword123",
+    password="StrongPassword123!",
     role="User",
 ):
     return client.post(
         REGISTER_URL,
         {
+            "full_name": full_name,
             "username": username,
             "email": email,
             "password": password,
@@ -44,52 +45,55 @@ def test_login():
         LOGIN_URL,
         {
             "username": "rekha",
-            "password": "StrongPassword123",
+            "password": "StrongPassword123!",
         },
     )
 
     assert response.status_code == 200
     assert response.json()["message"] == "Login successful"
 
-
 DUMMY_USERS = [
     {
+        "full_name": "User One",
         "username": "user1",
         "email": "u1@test.com",
-        "password": "StrongPassword123",
-        "confirm_password": "StrongPassword123",
+        "password": "StrongPassword123!",
+        "confirm_password": "StrongPassword123!",
         "role": "User",
     },
     {
+        "full_name": "User Two",
         "username": "user2",
         "email": "u2@test.com",
-        "password": "StrongPassword123",
-        "confirm_password": "StrongPassword123",
+        "password": "StrongPassword123!",
+        "confirm_password": "StrongPassword123!",
         "role": "Developer",
     },
     {
+        "full_name": "User Three",
         "username": "user3",
         "email": "u3@test.com",
-        "password": "StrongPassword123",
-        "confirm_password": "StrongPassword123",
+        "password": "StrongPassword123!",
+        "confirm_password": "StrongPassword123!",
         "role": "User",
     },
     {
+        "full_name": "User Four",
         "username": "user4",
         "email": "u4@test.com",
-        "password": "StrongPassword123",
-        "confirm_password": "StrongPassword123",
+        "password": "StrongPassword123!",
+        "confirm_password": "StrongPassword123!",
         "role": "Developer",
     },
     {
+        "full_name": "User Five",
         "username": "user5",
         "email": "u5@test.com",
-        "password": "StrongPassword123",
-        "confirm_password": "StrongPassword123",
+        "password": "StrongPassword123!",
+        "confirm_password": "StrongPassword123!",
         "role": "User",
     },
 ]
-
 
 @pytest.mark.django_db
 def test_dummy_users():
@@ -112,7 +116,7 @@ def test_logout():
         LOGIN_URL,
         {
             "username": "rekha",
-            "password": "StrongPassword123",
+            "password": "StrongPassword123!",
         },
     )
 
@@ -202,7 +206,7 @@ def test_login_returns_correct_role():
         LOGIN_URL,
         {
             "username": "developer",
-            "password": "StrongPassword123",
+            "password": "StrongPassword123!",
         },
     )
 
