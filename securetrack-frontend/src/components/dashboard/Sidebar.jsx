@@ -67,7 +67,13 @@ export default function Sidebar({ role }) {
                  </li>
                 )}
 
-                <li><Link to="#">🚨 Incidents</Link></li>
+                {role === "Admin" && (
+    <li>
+        <Link to="/incidents">
+            🚨 Incidents
+        </Link>
+    </li>
+)}
 
                 {role === "Admin" && (
                     <>

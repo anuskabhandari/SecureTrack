@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -14,9 +11,26 @@ from .serializers import IncidentSerializer
 @permission_classes([IsAuthenticated])
 def incident_list(request):
 
-    if request.method == "GET":
+    # Admin can see all incidents
+    if request.user.is_superuser:
 
         incidents = Incident.objects.all().order_by("-created_at")
+
+    # Developers only see assigned incidents
+    elif request.user.role == "Developer":
+
+        incidents = Incident.objects.filter(
+            assigned_to=request.user
+        ).order_by("-created_at")
+
+    # Users only see incidents related to vulnerabilities they reported
+    else:
+
+        incidents = Incident.objects.filter(
+            reported_by=request.user
+        ).order_by("-created_at")
+
+    if request.method == "GET":
 
         serializer = IncidentSerializer(
             incidents,
@@ -24,6 +38,14 @@ def incident_list(request):
         )
 
         return Response(serializer.data)
+
+    # Only Admin can create incidents
+    if not request.user.is_superuser:
+
+        return Response(
+            {"message": "Permission denied"},
+            status=status.HTTP_403_FORBIDDEN
+        )
 
     serializer = IncidentSerializer(
         data=request.data
@@ -58,8 +80,31 @@ def incident_detail(request, pk):
 
         return Response(
             {"message": "Incident not found"},
-            status=404
+            status=status.HTTP_404_NOT_FOUND
         )
+
+    # Admin has full access
+    if not request.user.is_superuser:
+
+        # Developer can only access assigned incidents
+        if request.user.role == "Developer":
+
+            if incident.assigned_to != request.user:
+
+                return Response(
+                    {"message": "Permission denied"},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
+        # User can only access their own incidents
+        else:
+
+            if incident.reported_by != request.user:
+
+                return Response(
+                    {"message": "Permission denied"},
+                    status=status.HTTP_403_FORBIDDEN
+                )
 
     if request.method == "GET":
 
@@ -82,11 +127,19 @@ def incident_detail(request, pk):
 
         return Response(
             serializer.errors,
-            status=400
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Only Admin can delete
+    if not request.user.is_superuser:
+
+        return Response(
+            {"message": "Permission denied"},
+            status=status.HTTP_403_FORBIDDEN
         )
 
     incident.delete()
 
-    return Response(
-        {"message": "Incident deleted successfully"}
-    )
+    return Response({
+        "message": "Incident deleted successfully."
+    })

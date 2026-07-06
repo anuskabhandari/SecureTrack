@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Incident
 
-
 class IncidentSerializer(serializers.ModelSerializer):
 
     vulnerability_title = serializers.CharField(
@@ -34,6 +33,15 @@ class IncidentSerializer(serializers.ModelSerializer):
             "priority",
             "status",
             "resolution_notes",
+            "created_at",
+            "updated_at",
+        ]
+
+        read_only_fields = [
+            "reported_by",
+            "reported_by_username",
+            "vulnerability_title",
+            "assigned_to_username",
             "created_at",
             "updated_at",
         ]

@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default function Register() {
   const [form, setForm] = useState({
+      fullName: "",
      username: "",
      email: "",
      role: "User",
@@ -12,6 +13,33 @@ export default function Register() {
 
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  const password = form.password;
+
+const passwordChecks = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+};
+
+const passedChecks = Object.values(passwordChecks).filter(Boolean).length;
+
+let strength = "Weak";
+let strengthColor = "danger";
+let progress = 20;
+
+if (passedChecks >= 3) {
+    strength = "Medium";
+    strengthColor = "warning";
+    progress = 60;
+}
+
+if (passedChecks === 5) {
+    strength = "Strong";
+    strengthColor = "success";
+    progress = 100;
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +54,7 @@ export default function Register() {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/register/",
         {
+            full_name: form.fullName,
             username: form.username,
             email: form.email,
             password: form.password,
@@ -42,19 +71,31 @@ export default function Register() {
       }, 1500);
 
     } catch (error) {
-      setSuccess(false);
 
-      const data = error.response?.data;
+    setSuccess(false);
 
-      if (data?.username) {
-        setMessage(data.username[0]);
-      } else if (data?.email) {
-        setMessage(data.email[0]);
-      } else {
-        setMessage("Registration failed");
-      }
+    const data = error.response?.data;
+
+    if (!data) {
+        setMessage("Registration failed.");
+        return;
     }
-  };
+
+    let errors = [];
+
+    Object.keys(data).forEach((key) => {
+
+        if (Array.isArray(data[key])) {
+            errors.push(`${key}: ${data[key].join(", ")}`);
+        } else {
+            errors.push(`${key}: ${data[key]}`);
+        }
+
+    });
+
+    setMessage(errors.join(" | "));
+}
+};
 
   return (
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
@@ -79,7 +120,27 @@ export default function Register() {
         )}
 
         <form onSubmit={handleSubmit}>
+        <div className="mb-3">
 
+    <label className="form-label">
+        Full Name
+    </label>
+
+    <input
+        type="text"
+        className="form-control"
+        placeholder="Enter your full name"
+        required
+        value={form.fullName}
+        onChange={(e) =>
+            setForm({
+                ...form,
+                fullName: e.target.value,
+            })
+        }
+    />
+
+</div>
           <div className="mb-3">
             <label className="form-label">
               Username
@@ -138,42 +199,117 @@ export default function Register() {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">
-              Password
-            </label>
 
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter password"
-              required
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  password: e.target.value,
-                })
-              }
-            />
-          </div>
+    <label className="form-label fw-semibold">
+        Password
+    </label>
+
+    <input
+        type="password"
+        className="form-control"
+        placeholder="Create a strong password"
+        required
+        value={form.password}
+        onChange={(e) =>
+            setForm({
+                ...form,
+                password: e.target.value,
+            })
+        }
+    />
+
+    {
+        form.password && (
+
+            <>
+                <div className="d-flex justify-content-between mt-3">
+
+                    <small className="fw-semibold">
+                        Password Strength
+                    </small>
+
+                    <span
+                        className={`badge bg-${strengthColor}`}
+                    >
+                        {strength}
+                    </span>
+
+                </div>
+
+                <div
+                    className="progress mt-2"
+                    style={{ height: "8px" }}
+                >
+
+                    <div
+                        className={`progress-bar bg-${strengthColor}`}
+                        style={{
+                            width: `${progress}%`
+                        }}
+                    />
+
+                </div>
+
+                <div className="mt-2">
+
+    <small className="text-muted">
+
+        Use at least 8 characters with uppercase, lowercase,
+        numbers and special characters.
+
+    </small>
+
+</div>
+            </>
+
+        )
+
+    }
+
+</div>
 
           <div className="mb-4">
-            <label className="form-label">
-              Confirm Password
-            </label>
 
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Confirm password"
-              required
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  confirmPassword: e.target.value,
-                })
-              }
-            />
-          </div>
+    <label className="form-label fw-semibold">
+        Confirm Password
+    </label>
+
+    <input
+        type="password"
+        className="form-control"
+        placeholder="Confirm password"
+        required
+        value={form.confirmPassword}
+        onChange={(e) =>
+            setForm({
+                ...form,
+                confirmPassword: e.target.value,
+            })
+        }
+    />
+
+    {
+        form.confirmPassword && (
+
+            <small
+                className={
+                    form.password === form.confirmPassword
+                        ? "text-success"
+                        : "text-danger"
+                }
+            >
+                {
+                    form.password === form.confirmPassword
+                        ? "✔ Passwords match"
+                        : "✖ Passwords do not match"
+                }
+            </small>
+
+        )
+
+    }
+
+</div>
 
           <button
             type="submit"
