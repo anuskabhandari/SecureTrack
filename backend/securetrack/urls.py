@@ -32,4 +32,11 @@ path(
     "api/incidents/",
     include("incidents.urls"),
 ),
+path(
+
+    "api/ai/",
+
+    include("ai.urls"),
+
+),
 ]

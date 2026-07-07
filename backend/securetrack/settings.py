@@ -22,6 +22,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'vulnerabilities',
     'dashboard',
     'incidents',
+    'ai',
 ]
 
 MIDDLEWARE = [
