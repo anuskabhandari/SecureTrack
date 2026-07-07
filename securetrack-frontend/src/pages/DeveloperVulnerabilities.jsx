@@ -4,6 +4,7 @@ import ViewVulnerabilityModal from "../components/vulnerability/ViewVulnerabilit
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 import VulnerabilityTable from "../components/vulnerability/VulnerabilityTable";
 import UpdateStatusModal from "../components/vulnerability/UpdateStatusModal";
+import AnalyzeWithAIModal from "../components/ai/AnalyzeWithAIModal";
 
 export default function DeveloperVulnerabilities() {
 
@@ -17,6 +18,8 @@ export default function DeveloperVulnerabilities() {
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [severityFilter, setSeverityFilter] = useState("");
+    const [showAIModal, setShowAIModal] = useState(false);
+    const [selectedAIVulnerability, setSelectedAIVulnerability] = useState(null);
 
 
     useEffect(() => {
@@ -151,6 +154,10 @@ export default function DeveloperVulnerabilities() {
                                 setShowViewModal(true);
 
                             }}
+                             onAnalyze={(v) => {
+                                setSelectedAIVulnerability(v);
+                                setShowAIModal(true);
+                             }}
                         />
 
                 }
@@ -189,6 +196,24 @@ export default function DeveloperVulnerabilities() {
             onClose={() => {
 
                 setShowViewModal(false);
+
+            }}
+
+        />
+
+    )
+}
+
+{
+    showAIModal && (
+
+        <AnalyzeWithAIModal
+
+            vulnerability={selectedAIVulnerability}
+
+            onClose={() => {
+
+                setShowAIModal(false);
 
             }}
 

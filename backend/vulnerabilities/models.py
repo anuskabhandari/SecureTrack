@@ -60,5 +60,39 @@ class Vulnerability(models.Model):
 
     updated_at = models.DateTimeField(auto_now=True)
 
+    # ---------- AI Analysis ----------
+
+    ai_risk_level = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
+    ai_impact = models.TextField(
+        blank=True,
+        null=True,
+    )
+
+    ai_attack_scenario = models.TextField(
+        blank=True,
+        null=True,
+    )
+
+    ai_recommended_fixes = models.JSONField(
+        blank=True,
+        null=True,
+    )
+
+    ai_priority = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
+    ai_analyzed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
     def __str__(self):
         return self.title
