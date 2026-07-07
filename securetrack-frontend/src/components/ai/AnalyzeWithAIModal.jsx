@@ -26,7 +26,7 @@ export default function AnalyzeWithAIModal({
                 "http://127.0.0.1:8000/api/ai/analyze-vulnerability/",
 
                 {
-
+                    vulnerability_id: vulnerability.id,
                     title: vulnerability.title,
 
                     description: vulnerability.description,

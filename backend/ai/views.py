@@ -5,6 +5,9 @@ import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils import timezone
+
+from vulnerabilities.models import Vulnerability
 
 from .services import ask_groq
 
@@ -25,6 +28,7 @@ def analyze_vulnerability(request):
 
     title = request.data.get("title")
     description = request.data.get("description")
+    vulnerability_id = request.data.get("vulnerability_id")
 
     if not title or not description:
 
@@ -90,6 +94,30 @@ Return JSON only.
 
         ai_response = json.loads(response_text)
 
+        if vulnerability_id:
+
+            try:
+
+                vulnerability = Vulnerability.objects.get(id=vulnerability_id)
+
+                vulnerability.ai_risk_level = ai_response.get("risk_level")
+
+                vulnerability.ai_impact = ai_response.get("impact")
+
+                vulnerability.ai_attack_scenario = ai_response.get("attack_scenario")
+
+                vulnerability.ai_recommended_fixes = ai_response.get("recommended_fixes")
+
+                vulnerability.ai_priority = ai_response.get("priority")
+
+                vulnerability.ai_analyzed_at = timezone.now()
+
+                vulnerability.save()
+
+            except Vulnerability.DoesNotExist:
+
+                pass
+
         return Response(ai_response)
 
     except Exception as e:
@@ -101,3 +129,4 @@ Return JSON only.
             },
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+        return Response(ai_response)
