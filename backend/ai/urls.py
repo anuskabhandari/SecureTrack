@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import test_ai
+from .views import test_ai, analyze_vulnerability
 
 
 urlpatterns = [
@@ -13,6 +13,10 @@ urlpatterns = [
 
         name="test_ai",
 
+    ),
+    path(
+        "analyze-vulnerability/",
+        analyze_vulnerability,
     ),
 
 ]
