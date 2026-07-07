@@ -1,17 +1,20 @@
 # groq api logic
-from groq import Groq
 
+from groq import Groq
 from django.conf import settings
 
 
-client = Groq(
-
-    api_key=settings.GROQ_API_KEY
-
-)
-
-
 def ask_groq(prompt):
+
+    if not settings.GROQ_API_KEY:
+        return {
+            "success": False,
+            "error": "Groq API key is not configured."
+        }
+
+    client = Groq(
+        api_key=settings.GROQ_API_KEY
+    )
 
     try:
 
@@ -20,15 +23,10 @@ def ask_groq(prompt):
             model="llama-3.3-70b-versatile",
 
             messages=[
-
                 {
-
                     "role": "user",
-
                     "content": prompt,
-
                 }
-
             ],
 
             temperature=0.3,
@@ -38,19 +36,13 @@ def ask_groq(prompt):
         )
 
         return {
-
             "success": True,
-
             "response": completion.choices[0].message.content,
-
         }
 
     except Exception as e:
 
         return {
-
             "success": False,
-
             "error": str(e),
-
         }
