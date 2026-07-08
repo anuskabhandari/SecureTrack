@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'dashboard',
     'incidents',
     'ai',
+    'profiles',
 ]
 
 MIDDLEWARE = [

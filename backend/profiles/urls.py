@@ -1,0 +1,12 @@
+from django.urls import path
+from .views import ProfileView , ChangePasswordView
+
+urlpatterns = [
+
+    path("", ProfileView.as_view()),
+path(
+        "change-password/",
+        ChangePasswordView.as_view(),
+    ),
+
+]

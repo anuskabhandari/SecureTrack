@@ -99,23 +99,14 @@ export default function Sidebar({ role }) {
                 {role === "Admin" && (
                     <>
                         <li><Link to="/users">👥 Users</Link></li>
-                        <li><Link to="#">📊 Analytics</Link></li>
-                        <li><Link to="#">📄 Reports</Link></li>
-                        <li><Link to="#">⚙ Settings</Link></li>
+
                     </>
                 )}
+                <Link to="/settings">
+    <i className="bi bi-gear"></i> ⚙ Settings
+</Link>
 
-                {role === "Developer" && (
-                    <>
-                        <li><Link to="#">📋 My Tasks</Link></li>
-                        <li><Link to="#">✅ Assigned Issues</Link></li>
-                    </>
-                )}
 
-                {role === "User" && (
-                        <li>
-                            <Link to="#">➕ Report Issue</Link></li>
-                )}
 
             </ul>
 

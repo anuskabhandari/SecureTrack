@@ -17,6 +17,7 @@ import AdminIncidents from "./pages/AdminIncidents";
 import DeveloperIncidents from "./pages/DeveloperIncidents";
 import UserIncidents from "./pages/UserIncidents";
 import AIAssistant from "./pages/AIAssistant";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -106,6 +107,11 @@ function App() {
        <Route
          path="/ai-assistant"
          element={<AIAssistant />}
+       />
+
+       <Route
+       path="/settings"
+       element={<Settings />}
        />
 
 

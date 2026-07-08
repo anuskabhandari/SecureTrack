@@ -41,6 +41,10 @@ path(
     include("ai.urls"),
 
 ),
+path(
+    "api/profile/",
+    include("profiles.urls"),
+),
 
 
 ]
