@@ -8,12 +8,16 @@ from .permissions import IsAdminOrAssignedDeveloper
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.http import FileResponse, Http404
 from rest_framework.decorators import api_view, permission_classes
-
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+    JSONParser,
+)
 class VulnerabilityListCreateView(generics.ListCreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = VulnerabilitySerializer
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_queryset(self):
 
@@ -56,7 +60,7 @@ class VulnerabilityDetailView(generics.RetrieveUpdateDestroyAPIView):
         IsAdminOrAssignedDeveloper,
     ]
 
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
     queryset = Vulnerability.objects.all()
     serializer_class = VulnerabilitySerializer
 
