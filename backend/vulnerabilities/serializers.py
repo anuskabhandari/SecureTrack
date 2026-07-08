@@ -30,6 +30,7 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
             "assigned_to_name",
             "created_at",
             "updated_at",
+            "evidence_file",
         ]
 
         read_only_fields = (

@@ -5,11 +5,15 @@ from .models import Vulnerability
 from .serializers import VulnerabilitySerializer
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrAssignedDeveloper
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.http import FileResponse, Http404
+from rest_framework.decorators import api_view, permission_classes
 
 class VulnerabilityListCreateView(generics.ListCreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = VulnerabilitySerializer
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
 
@@ -52,5 +56,27 @@ class VulnerabilityDetailView(generics.RetrieveUpdateDestroyAPIView):
         IsAdminOrAssignedDeveloper,
     ]
 
+    parser_classes = [MultiPartParser, FormParser]
     queryset = Vulnerability.objects.all()
     serializer_class = VulnerabilitySerializer
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def download_evidence(request, pk):
+
+    try:
+
+        vulnerability = Vulnerability.objects.get(pk=pk)
+
+        if not vulnerability.evidence_file:
+            raise Http404("No evidence file found.")
+
+        return FileResponse(
+            vulnerability.evidence_file.open("rb"),
+            as_attachment=True,
+            filename=vulnerability.evidence_file.name.split("/")[-1],
+        )
+
+    except Vulnerability.DoesNotExist:
+        raise Http404("Vulnerability not found.")
