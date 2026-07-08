@@ -1,10 +1,10 @@
 from django.shortcuts import render
-
-# Create your views here.
 import json
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+
 from django.utils import timezone
 
 from vulnerabilities.models import Vulnerability
@@ -16,12 +16,11 @@ from .services import ask_groq
 def test_ai(request):
 
     result = ask_groq(
-
         "Reply with exactly: Groq AI Connected Successfully."
-
     )
 
     return Response(result)
+
 
 @api_view(["POST"])
 def analyze_vulnerability(request):
@@ -33,13 +32,10 @@ def analyze_vulnerability(request):
     if not title or not description:
 
         return Response(
-
             {
                 "error": "Title and description are required."
             },
-
             status=status.HTTP_400_BAD_REQUEST
-
         )
 
     prompt = f"""
@@ -77,11 +73,8 @@ Return JSON only.
     if not result["success"]:
 
         return Response(
-
             result,
-
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
-
         )
 
     try:
@@ -101,21 +94,15 @@ Return JSON only.
                 vulnerability = Vulnerability.objects.get(id=vulnerability_id)
 
                 vulnerability.ai_risk_level = ai_response.get("risk_level")
-
                 vulnerability.ai_impact = ai_response.get("impact")
-
                 vulnerability.ai_attack_scenario = ai_response.get("attack_scenario")
-
                 vulnerability.ai_recommended_fixes = ai_response.get("recommended_fixes")
-
                 vulnerability.ai_priority = ai_response.get("priority")
-
                 vulnerability.ai_analyzed_at = timezone.now()
 
                 vulnerability.save()
 
             except Vulnerability.DoesNotExist:
-
                 pass
 
         return Response(ai_response)
@@ -129,4 +116,50 @@ Return JSON only.
             },
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-        return Response(ai_response)
+
+
+@api_view(["POST"])
+def chat_assistant(request):
+
+    message = request.data.get("message")
+
+    if not message:
+
+        return Response(
+            {
+                "error": "Message is required."
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    prompt = f"""
+You are SecureTrack AI Security Assistant.
+
+You help users with cybersecurity.
+
+Rules:
+- Answer only cybersecurity-related questions.
+-Answer in a clean format.
+- Keep answers concise.
+- Never return everything in one paragraph.
+- Use bullet points whenever appropriate.
+- If the question is unrelated to cybersecurity, politely explain that you only assist with cybersecurity topics.
+
+User Question:
+{message}
+"""
+
+    result = ask_groq(prompt)
+
+    if not result["success"]:
+
+        return Response(
+            result,
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    return Response(
+        {
+            "response": result["response"]
+        }
+    )
