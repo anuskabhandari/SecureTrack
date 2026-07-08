@@ -90,6 +90,11 @@ export default function Sidebar({ role }) {
         </Link>
     </li>
 )}
+             <li>
+    <Link to="/ai-assistant">
+        🤖 AI Assistant
+    </Link>
+</li>
 
                 {role === "Admin" && (
                     <>
