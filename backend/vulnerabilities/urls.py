@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     VulnerabilityListCreateView,
-    VulnerabilityDetailView,
+    VulnerabilityDetailView,download_evidence,
 )
 
 urlpatterns = [
@@ -17,5 +17,6 @@ urlpatterns = [
         VulnerabilityDetailView.as_view(),
         name="vulnerability-detail",
     ),
+    path("<int:pk>/download/", download_evidence),
 
 ]

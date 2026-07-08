@@ -59,6 +59,11 @@ class Vulnerability(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     updated_at = models.DateTimeField(auto_now=True)
+    evidence_file = models.FileField(
+        upload_to="vulnerability_files/",
+        blank=True,
+        null=True
+    )
 
     # ---------- AI Analysis ----------
 

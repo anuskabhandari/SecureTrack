@@ -165,3 +165,6 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 
 }
+# to configure media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
