@@ -119,7 +119,7 @@ const clearChat = () => {
 
                     <h2 className="mb-2">
 
-                        🤖 AI Security Assistant
+                         AI Security Assistant
 
                     </h2>
 
