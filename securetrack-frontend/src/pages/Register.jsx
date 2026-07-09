@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useState } from "react";
 import axios from "axios";
 
@@ -11,8 +12,6 @@ export default function Register() {
      confirmPassword: "",
 });
 
-  const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState(false);
   const password = form.password;
 
 const passwordChecks = {
@@ -45,8 +44,7 @@ if (passedChecks === 5) {
     e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
-      setSuccess(false);
-      setMessage("Passwords do not match");
+      toast.error("Passwords do not match.");
       return;
     }
 
@@ -63,12 +61,11 @@ if (passedChecks === 5) {
         }
       );
 
-      setSuccess(true);
-      setMessage(response.data.message);
+      toast.success(response.data.message);
 
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 1500);
+       setTimeout(() => {
+            window.location.href = "/login";
+       }, 1500);
 
     } catch (error) {
 
@@ -77,7 +74,7 @@ if (passedChecks === 5) {
     const data = error.response?.data;
 
     if (!data) {
-        setMessage("Registration failed.");
+       toast.error("Registration failed.");
         return;
     }
 
@@ -93,7 +90,7 @@ if (passedChecks === 5) {
 
     });
 
-    setMessage(errors.join(" | "));
+   toast.error(errors.join("\n"));
 }
 };
 
@@ -108,16 +105,7 @@ if (passedChecks === 5) {
           Create Account
         </h2>
 
-        {message && (
-          <div
-            className={`alert ${
-              success ? "alert-success" : "alert-danger"
-            }`}
-          >
-            {success ? "✓ " : "✕ "}
-            {message}
-          </div>
-        )}
+
 
         <form onSubmit={handleSubmit}>
         <div className="mb-3">

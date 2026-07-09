@@ -4,402 +4,400 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 
-export default function Settings() {
 
-    const role = localStorage.getItem("role");
-    const [passwordForm, setPasswordForm] = useState({
-
-       current_password: "",
-
-       new_password: "",
-
-       confirm_password: "",
-
-    });
-
-    const [form, setForm] = useState({
-
-        username: "",
-        first_name: "",
-        last_name: "",
-        email: "",
-        role: "",
-
-    });
-
-    useEffect(() => {
-
-        loadProfile();
-
-    }, []);
-
-    const loadProfile = async () => {
-
-        try {
-
-            const token = localStorage.getItem("access");
-
-            const response = await axios.get(
-
-                "http://127.0.0.1:8000/api/profile/",
-
-                {
-
-                    headers: {
-
-                        Authorization: `Bearer ${token}`,
-
-                    },
-
-                }
-
-            );
-
-            setForm(response.data);
-
-        } catch (error) {
-
-            console.log(error);
-
-        }
-
-    };
-
-    const handleChange = (e) => {
-
-        setForm({
-
-            ...form,
-
-            [e.target.name]: e.target.value,
-
-        });
-
-    };
-    const handlePasswordChange = (e) => {
-
-       setPasswordForm({
-
-          ...passwordForm,
-
-          [e.target.name]: e.target.value,
-
-       });
-
-    };
-
-    const saveProfile = async () => {
-
-        try {
-
-            const token = localStorage.getItem("access");
-
-            await axios.put(
-
-                "http://127.0.0.1:8000/api/profile/",
-
-                {
-
-                    first_name: form.first_name,
-                    last_name: form.last_name,
-                    email: form.email,
-
-                },
-
-                {
-
-                    headers: {
-
-                        Authorization: `Bearer ${token}`,
-
-                    },
-
-                }
-
-            );
-
-            toast.success("Profile updated successfully.");
-
-        }
-
-        catch (error) {
-
-            toast.error("Failed to update profile.");
-
-        }
-
-    };
-    const changePassword = async () => {
-
-    try {
-
-        const token = localStorage.getItem("access");
-
-        await axios.post(
-
-            "http://127.0.0.1:8000/api/profile/change-password/",
-
-            passwordForm,
-
-            {
-
-                headers: {
-
-                    Authorization: `Bearer ${token}`,
-
-                },
-
-            }
-
-        );
-
-        toast.success(
-    "Password changed successfully. Please login again."
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api",
+});
+
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("role");
+      localStorage.removeItem("username");
+      localStorage.removeItem("isLoggedIn");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
 );
 
-localStorage.removeItem("access");
-localStorage.removeItem("refresh");
-localStorage.removeItem("role");
-localStorage.removeItem("username");
-localStorage.removeItem("isLoggedIn");
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LENGTH = 8;
 
-setTimeout(() => {
-
-    navigate("/login");
-
-}, 1500);
-
-    }
-
-    catch (error) {
-
-        toast.error(
-
-            error.response?.data?.error ||
-
-            "Failed to change password."
-
-        );
-
-    }
-
+const EMPTY_PROFILE = {
+  username: "",
+  first_name: "",
+  last_name: "",
+  email: "",
+  role: "",
 };
 
+const EMPTY_PASSWORD_FORM = {
+  current_password: "",
+  new_password: "",
+  confirm_password: "",
+};
 
-    return (
+export default function Settings() {
+  const role = localStorage.getItem("role");
+  const navigate = useNavigate();
 
-        <DashboardLayout role={role}>
+  const [form, setForm] = useState(EMPTY_PROFILE);
+  const [passwordForm, setPasswordForm] = useState(EMPTY_PASSWORD_FORM);
+  const [showPasswords, setShowPasswords] = useState(false);
 
-            <div className="container">
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-                <div className="card shadow p-4">
+  const [profileErrors, setProfileErrors] = useState({});
+  const [passwordErrors, setPasswordErrors] = useState({});
 
-                    <h2 className="mb-4">
+  useEffect(() => {
+    loadProfile();
+  }, []);
 
-                        Profile Settings
+  const loadProfile = async () => {
+    setIsProfileLoading(true);
+    try {
+      const { data } = await apiClient.get("/profile/");
+      setForm(data);
+    } catch (error) {
+      toast.error("Unable to load your profile. Please try again.");
+    } finally {
+      setIsProfileLoading(false);
+    }
+  };
 
-                    </h2>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    setProfileErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
 
-                    <div className="mb-3">
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({ ...prev, [name]: value }));
+    setPasswordErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
 
-                        <label>Username</label>
+  const validateProfile = () => {
+    const errors = {};
+    if (!form.first_name.trim()) errors.first_name = "First name is required.";
+    if (!form.last_name.trim()) errors.last_name = "Last name is required.";
+    if (!form.email.trim()) {
+      errors.email = "Email is required.";
+    } else if (!EMAIL_REGEX.test(form.email)) {
+      errors.email = "Enter a valid email address.";
+    }
+    setProfileErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
-                        <input
+  const validatePasswordForm = () => {
+    const errors = {};
+    if (!passwordForm.current_password) {
+      errors.current_password = "Current password is required.";
+    }
+    if (!passwordForm.new_password) {
+      errors.new_password = "New password is required.";
+    } else if (passwordForm.new_password.length < MIN_PASSWORD_LENGTH) {
+      errors.new_password = `New password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+    } else if (passwordForm.new_password === passwordForm.current_password) {
+      errors.new_password = "New password must differ from the current password.";
+    }
+    if (passwordForm.confirm_password !== passwordForm.new_password) {
+      errors.confirm_password = "Passwords do not match.";
+    }
+    setPasswordErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
-                            className="form-control"
+  const saveProfile = async () => {
+    if (!validateProfile()) return;
 
-                            value={form.username}
+    setIsSavingProfile(true);
+    try {
+      await apiClient.put("/profile/", {
+        first_name: form.first_name,
+        last_name: form.last_name,
+        email: form.email,
+      });
+      toast.success("Profile updated successfully.");
+    } catch (error) {
+      const apiErrors = error.response?.data;
+      if (apiErrors && typeof apiErrors === "object") {
+        setProfileErrors(apiErrors);
+      }
+      toast.error(apiErrors?.detail || "Failed to update profile.");
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
 
-                            disabled
+  const changePassword = async () => {
+    if (!validatePasswordForm()) return;
 
-                        />
+    setIsChangingPassword(true);
+    try {
+      await apiClient.post("/profile/change-password/", passwordForm);
 
+      toast.success("Password changed successfully. Please log in again.");
+      setPasswordForm(EMPTY_PASSWORD_FORM);
+
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("role");
+      localStorage.removeItem("username");
+      localStorage.removeItem("isLoggedIn");
+
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.error || "Failed to change password."
+      );
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
+  return (
+    <DashboardLayout role={role}>
+      <div className="container">
+        <div className="card shadow p-4">
+          <h2 className="mb-4">Profile Settings</h2>
+
+          {isProfileLoading ? (
+            <div className="d-flex align-items-center gap-2 text-muted">
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              />
+              Loading profile...
+            </div>
+          ) : (
+            <>
+              <div className="mb-3">
+                <label htmlFor="username" className="form-label">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  className="form-control"
+                  value={form.username}
+                  disabled
+                />
+              </div>
+
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="first_name" className="form-label">
+                    First Name
+                  </label>
+                  <input
+                    id="first_name"
+                    className={`form-control ${
+                      profileErrors.first_name ? "is-invalid" : ""
+                    }`}
+                    name="first_name"
+                    value={form.first_name}
+                    onChange={handleChange}
+                  />
+                  {profileErrors.first_name && (
+                    <div className="invalid-feedback">
+                      {profileErrors.first_name}
                     </div>
-
-                    <div className="row">
-
-                        <div className="col-md-6">
-
-                            <label>First Name</label>
-
-                            <input
-
-                                className="form-control"
-
-                                name="first_name"
-
-                                value={form.first_name}
-
-                                onChange={handleChange}
-
-                            />
-
-                        </div>
-
-                        <div className="col-md-6">
-
-                            <label>Last Name</label>
-
-                            <input
-
-                                className="form-control"
-
-                                name="last_name"
-
-                                value={form.last_name}
-
-                                onChange={handleChange}
-
-                            />
-
-                        </div>
-
-                    </div>
-
-                    <div className="mt-3">
-
-                        <label>Email</label>
-
-                        <input
-
-                            className="form-control"
-
-                            name="email"
-
-                            value={form.email}
-
-                            onChange={handleChange}
-
-                        />
-
-                    </div>
-
-                    <div className="mt-3">
-
-                        <label>Role</label>
-
-                        <input
-
-                            className="form-control"
-
-                            value={form.role}
-
-                            disabled
-
-                        />
-
-                    </div>
-
-                    <button
-
-                        className="btn btn-primary mt-4"
-
-                        onClick={saveProfile}
-
-                    >
-
-                        Save Changes
-
-                    </button>
-
+                  )}
                 </div>
 
-            </div>
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="last_name" className="form-label">
+                    Last Name
+                  </label>
+                  <input
+                    id="last_name"
+                    className={`form-control ${
+                      profileErrors.last_name ? "is-invalid" : ""
+                    }`}
+                    name="last_name"
+                    value={form.last_name}
+                    onChange={handleChange}
+                  />
+                  {profileErrors.last_name && (
+                    <div className="invalid-feedback">
+                      {profileErrors.last_name}
+                    </div>
+                  )}
+                </div>
+              </div>
 
-            <hr className="my-5" />
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  className={`form-control ${
+                    profileErrors.email ? "is-invalid" : ""
+                  }`}
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                />
+                {profileErrors.email && (
+                  <div className="invalid-feedback">{profileErrors.email}</div>
+                )}
+              </div>
 
-<h3>
+              <div className="mb-4">
+                <label htmlFor="role" className="form-label">
+                  Role
+                </label>
+                <input
+                  id="role"
+                  className="form-control"
+                  value={form.role}
+                  disabled
+                />
+              </div>
 
-    Change Password
+              <button
+                className="btn btn-primary"
+                onClick={saveProfile}
+                disabled={isSavingProfile}
+              >
+                {isSavingProfile ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
+            </>
+          )}
+        </div>
 
-</h3>
+        <div className="card shadow p-4 mt-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h3 className="mb-0">Change Password</h3>
+            <button
+              type="button"
+              className="btn btn-link btn-sm text-decoration-none"
+              onClick={() => setShowPasswords((prev) => !prev)}
+            >
+              {showPasswords ? "Hide" : "Show"} passwords
+            </button>
+          </div>
 
-<div className="mb-3">
+          <div className="mb-3">
+            <label htmlFor="current_password" className="form-label">
+              Current Password
+            </label>
+            <input
+              id="current_password"
+              type={showPasswords ? "text" : "password"}
+              className={`form-control ${
+                passwordErrors.current_password ? "is-invalid" : ""
+              }`}
+              name="current_password"
+              value={passwordForm.current_password}
+              onChange={handlePasswordChange}
+              autoComplete="current-password"
+            />
+            {passwordErrors.current_password && (
+              <div className="invalid-feedback">
+                {passwordErrors.current_password}
+              </div>
+            )}
+          </div>
 
-    <label>
+          <div className="mb-3">
+            <label htmlFor="new_password" className="form-label">
+              New Password
+            </label>
+            <input
+              id="new_password"
+              type={showPasswords ? "text" : "password"}
+              className={`form-control ${
+                passwordErrors.new_password ? "is-invalid" : ""
+              }`}
+              name="new_password"
+              value={passwordForm.new_password}
+              onChange={handlePasswordChange}
+              autoComplete="new-password"
+            />
+            {passwordErrors.new_password ? (
+              <div className="invalid-feedback">
+                {passwordErrors.new_password}
+              </div>
+            ) : (
+              <div className="form-text">
+                At least {MIN_PASSWORD_LENGTH} characters.
+              </div>
+            )}
+          </div>
 
-        Current Password
+          <div className="mb-4">
+            <label htmlFor="confirm_password" className="form-label">
+              Confirm New Password
+            </label>
+            <input
+              id="confirm_password"
+              type={showPasswords ? "text" : "password"}
+              className={`form-control ${
+                passwordErrors.confirm_password ? "is-invalid" : ""
+              }`}
+              name="confirm_password"
+              value={passwordForm.confirm_password}
+              onChange={handlePasswordChange}
+              autoComplete="new-password"
+            />
+            {passwordErrors.confirm_password && (
+              <div className="invalid-feedback">
+                {passwordErrors.confirm_password}
+              </div>
+            )}
+          </div>
 
-    </label>
-
-    <input
-
-        type="password"
-
-        className="form-control"
-
-        name="current_password"
-
-        value={passwordForm.current_password}
-
-        onChange={handlePasswordChange}
-
-    />
-
-</div>
-
-<div className="mb-3">
-
-    <label>
-
-        New Password
-
-    </label>
-
-    <input
-
-        type="password"
-
-        className="form-control"
-
-        name="new_password"
-
-        value={passwordForm.new_password}
-
-        onChange={handlePasswordChange}
-
-    />
-
-</div>
-
-<div className="mb-4">
-
-    <label>
-
-        Confirm Password
-
-    </label>
-
-    <input
-
-        type="password"
-
-        className="form-control"
-
-        name="confirm_password"
-
-        value={passwordForm.confirm_password}
-
-        onChange={handlePasswordChange}
-
-    />
-
-</div>
-
-<button
-
-    className="btn btn-warning"
-
-    onClick={changePassword}
-
->
-
-    Change Password
-
-</button>
-
-        </DashboardLayout>
-
-    );
-
+          <button
+            className="btn btn-warning"
+            onClick={changePassword}
+            disabled={isChangingPassword}
+          >
+            {isChangingPassword ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                />
+                Changing Password...
+              </>
+            ) : (
+              "Change Password"
+            )}
+          </button>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
 }

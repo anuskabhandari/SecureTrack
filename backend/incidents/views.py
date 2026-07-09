@@ -12,22 +12,20 @@ from .serializers import IncidentSerializer
 def incident_list(request):
 
     # Admin can see all incidents
-    if request.user.is_superuser:
+    if request.user.role == "Admin":
 
         incidents = Incident.objects.all().order_by("-created_at")
 
-    # Developers only see assigned incidents
     elif request.user.role == "Developer":
 
         incidents = Incident.objects.filter(
             assigned_to=request.user
         ).order_by("-created_at")
 
-    # Users only see incidents related to vulnerabilities they reported
     else:
 
         incidents = Incident.objects.filter(
-            reported_by=request.user
+            vulnerability__reported_by=request.user
         ).order_by("-created_at")
 
     if request.method == "GET":
@@ -40,7 +38,7 @@ def incident_list(request):
         return Response(serializer.data)
 
     # Only Admin can create incidents
-    if not request.user.is_superuser:
+    if request.user.role != "Admin":
 
         return Response(
             {"message": "Permission denied"},
@@ -99,7 +97,7 @@ def incident_detail(request, pk):
         # User can only access their own incidents
         else:
 
-            if incident.reported_by != request.user:
+            if incident.vulnerability.reported_by != request.user:
 
                 return Response(
                     {"message": "Permission denied"},
@@ -121,7 +119,7 @@ def incident_detail(request, pk):
         else:
 
             incidents = Incident.objects.filter(
-                reported_by=request.user
+                vulnerability__reported_by=request.user
             )
 
         serializer = IncidentSerializer(
