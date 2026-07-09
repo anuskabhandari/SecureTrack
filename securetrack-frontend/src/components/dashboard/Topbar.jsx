@@ -43,7 +43,7 @@ export default function Topbar() {
             <div>
 
                 <h2>
-                    Welcome back, {username} 👋
+                    Welcome back, {username}
                 </h2>
 
                 <small>

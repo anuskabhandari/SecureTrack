@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 
 export default function Settings() {
@@ -153,17 +153,21 @@ export default function Settings() {
 
         );
 
-        toast.success("Password changed successfully.");
+        toast.success(
+    "Password changed successfully. Please login again."
+);
 
-        setPasswordForm({
+localStorage.removeItem("access");
+localStorage.removeItem("refresh");
+localStorage.removeItem("role");
+localStorage.removeItem("username");
+localStorage.removeItem("isLoggedIn");
 
-            current_password: "",
+setTimeout(() => {
 
-            new_password: "",
+    navigate("/login");
 
-            confirm_password: "",
-
-        });
+}, 1500);
 
     }
 

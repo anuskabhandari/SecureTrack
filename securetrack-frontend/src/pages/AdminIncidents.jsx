@@ -46,11 +46,13 @@ const [incidentToDelete, setIncidentToDelete] = useState(null);
 
         } catch (error) {
 
-            console.log(error);
+           console.log(error);
+
+            toast.error("Failed to load incidents.");
 
         } finally {
 
-            setLoading(false);
+             setLoading(false);
 
         }
 

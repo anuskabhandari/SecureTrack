@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import admin_dashboard
+from .views import admin_dashboard , landing_dashboard
 
 urlpatterns = [
 
@@ -8,5 +8,9 @@ urlpatterns = [
         "admin/",
         admin_dashboard
     ),
+path(
+    "public/dashboard/",
+    landing_dashboard,
+),
 
 ]

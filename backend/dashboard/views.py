@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from vulnerabilities.models import Vulnerability
@@ -99,5 +99,32 @@ def admin_dashboard(request):
         "low": low,
 
         "recent": recent_data,
+
+    })
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def landing_dashboard(request):
+
+    return Response({
+
+        "total_users": User.objects.count(),
+
+        "total_vulnerabilities":
+            Vulnerability.objects.count(),
+
+        "critical":
+            Vulnerability.objects.filter(
+                severity="Critical"
+            ).count(),
+
+        "resolved":
+            Vulnerability.objects.filter(
+                status="Resolved"
+            ).count(),
+
+        "open":
+            Vulnerability.objects.filter(
+                status="Open"
+            ).count(),
 
     })
