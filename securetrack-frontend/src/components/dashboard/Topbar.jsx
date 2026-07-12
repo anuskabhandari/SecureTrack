@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-export default function Topbar() {
+export default function Topbar({
+
+    sidebarOpen,
+    setSidebarOpen
+
+})  {
 
     const username = localStorage.getItem("username") || "User";
     const role = localStorage.getItem("role") || "User";
@@ -39,6 +44,12 @@ export default function Topbar() {
     return (
 
         <div className="topbar">
+            <button
+              className="menu-btn"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+                ☰
+            </button>
 
             <div>
 
@@ -63,11 +74,8 @@ export default function Topbar() {
                     {darkMode ? "☀️" : "🌙"}
                 </button>
 
-                <button className="notification">
 
-                    🔔
 
-                </button>
 
                <div className="user">
 

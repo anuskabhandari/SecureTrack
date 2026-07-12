@@ -132,11 +132,10 @@ Topbar
 }
 
 .top-right{
-
+    width:auto;
     display:flex;
     align-items:center;
-    gap:20px;
-
+    gap:10px;
 }
 
 .top-right input{
@@ -164,7 +163,12 @@ Topbar
     font-weight:600;
 
 }
-
+.sidebar{
+    transition:left .3s ease;
+}
+body{
+    overflow-x:hidden;
+}
 /* ===========================
 Cards
 =========================== */
@@ -336,57 +340,61 @@ Scrollbar
 Responsive
 =========================== */
 
-@media(max-width:1200px){
 
-.cards{
 
-grid-template-columns:repeat(2,1fr);
-
-}
-
-}
-
-@media(max-width:768px){
+@media (max-width:768px){
 
 .sidebar{
+    left:-260px;
+    transition:0.3s;
+    z-index:1000;
+}
 
-left:-260px;
-
+.sidebar.active{
+    left:0;
 }
 
 .main-content{
-
-margin-left:0;
-width:100%;
-
+    margin-left:0;
+    width:100%;
+    padding:15px;
 }
 
 .cards{
+    grid-template-columns:1fr;
+}
 
-grid-template-columns:1fr;
+
+
+.top-right{
+    width:100%;
+    justify-content:space-between;
+}
+
+.top-right input{
+    width:100%;
+}
+
+table{
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+.menu-btn{
+
+    display:block;
 
 }
 
 .topbar{
 
-flex-direction:column;
-gap:15px;
-align-items:flex-start;
+    flex-direction:row;
 
-}
+    justify-content:space-between;
 
-.top-right{
-    display:flex;
     align-items:center;
-    gap:15px;
-}
-
-.top-right input{
-
-width:100%;
 
 }
-
 }
 
 .logout-btn{
@@ -684,4 +692,97 @@ body.dark-theme .user-info strong{
 
 body.dark-theme .user-info small{
     color:#cbd5e1;
+}
+.menu-btn{
+    display:none;
+}
+
+@media (max-width:768px){
+
+    .menu-btn{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:42px;
+        height:42px;
+        background:#2563eb;
+        color:#fff;
+        border:none;
+        border-radius:10px;
+        font-size:22px;
+        cursor:pointer;
+        flex-shrink:0;
+    }
+
+    .topbar{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:15px;
+    }
+
+    .topbar > div:first-of-type{
+        flex:1;
+    }
+
+}
+
+.menu-btn:hover{
+    background:#1d4ed8;
+}
+
+.sidebar-overlay{
+
+    display:none;
+
+}
+
+@media(max-width:768px){
+
+.sidebar-overlay{
+
+    display:block;
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:100%;
+
+    background:rgba(0,0,0,.45);
+
+    z-index:999;
+
+}
+
+.sidebar{
+
+    z-index:1000;
+
+}
+
+}
+@media(max-width:576px){
+
+.user-info{
+    display:none;
+}
+
+.user{
+    padding:8px;
+}
+
+.avatar{
+    width:42px;
+    height:42px;
+}
+
+}
+.topbar{
+    position:relative;
+    z-index:998;
 }

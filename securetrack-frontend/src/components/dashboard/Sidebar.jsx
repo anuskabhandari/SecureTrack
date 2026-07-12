@@ -1,11 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 
-export default function Sidebar({ role }) {
+export default function Sidebar({
 
+    role,
+    sidebarOpen,
+    setSidebarOpen
+
+}) {
     const navigate = useNavigate();
 
     const logout = () => {
-
+         setSidebarOpen(false);
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("role");
         localStorage.removeItem("username");
@@ -15,7 +20,7 @@ export default function Sidebar({ role }) {
 
     return (
 
-        <div className="sidebar">
+        <div className={`sidebar ${sidebarOpen ? "active" : ""}`}>
 
             <div className="logo">
 
@@ -23,29 +28,40 @@ export default function Sidebar({ role }) {
 
             </div>
 
+
             <ul>
 
                 {role === "Admin" && (
-                  <li>
-                    <Link to="/admin-dashboard">🏠 Dashboard</Link>
-                  </li>
+                 <li>
+    <Link
+        to="/admin-dashboard"
+        onClick={() => setSidebarOpen(false)}
+    >
+        🏠 Dashboard
+    </Link>
+</li>
                 )}
 
                 {role === "Developer" && (
                     <li>
-                        <Link to="/developer-dashboard">🏠 Dashboard</Link>
+                        <Link
+    to="/developer-dashboard"
+    onClick={() => setSidebarOpen(false)}
+>🏠 Dashboard</Link>
                     </li>
                 )}
 
                 {role === "User" && (
                   <li>
-                     <Link to="/user-dashboard">🏠 Dashboard</Link>
+                     <Link to="/user-dashboard"
+                      onClick={() => setSidebarOpen(false)}>🏠 Dashboard</Link>
                   </li>
                 )}
 
                 {role === "Admin" && (
                    <li>
-                    <Link to="/vulnerabilities">
+                    <Link to="/vulnerabilities"
+                     onClick={() => setSidebarOpen(false)}>
                         🛡 Vulnerabilities
                     </Link>
                    </li>
@@ -53,14 +69,15 @@ export default function Sidebar({ role }) {
 
                 {role === "Developer" && (
                    <li>
-                       <Link to="/developer/vulnerabilities">
+                       <Link to="/developer/vulnerabilities"
+                        onClick={() => setSidebarOpen(false)}>
                            🛠 My Assigned Vulnerabilities
                        </Link>
                    </li>
                 )}
                 {role === "Developer" && (
                    <li>
-                      <Link to="/developer/incidents">
+                      <Link to="/developer/incidents" onClick={() => setSidebarOpen(false)}>
                          🚨 My Incidents
                       </Link>
                    </li>
@@ -68,7 +85,7 @@ export default function Sidebar({ role }) {
 
                 {role === "User" && (
                   <li>
-                      <Link to="/user/vulnerabilities">
+                      <Link to="/user/vulnerabilities" onClick={() => setSidebarOpen(false)}>
                          📄 My Reported Vulnerabilities
                       </Link>
                  </li>
@@ -77,7 +94,7 @@ export default function Sidebar({ role }) {
 
                 {role === "User" && (
                   <li>
-                     <Link to="/user/incidents">
+                     <Link to="/user/incidents" onClick={() => setSidebarOpen(false)}>
                         🚨 My Incidents
                      </Link>
                   </li>
@@ -85,26 +102,32 @@ export default function Sidebar({ role }) {
 
                 {role === "Admin" && (
     <li>
-        <Link to="/incidents">
+        <Link to="/incidents" onClick={() => setSidebarOpen(false)}>
             🚨 Incidents
         </Link>
     </li>
 )}
              <li>
-    <Link to="/ai-assistant">
+    <Link to="/ai-assistant" onClick={() => setSidebarOpen(false)}>
         🤖 AI Assistant
     </Link>
 </li>
 
                 {role === "Admin" && (
                     <>
-                        <li><Link to="/users">👥 Users</Link></li>
+                        <li><Link to="/users"
+                         onClick={() => setSidebarOpen(false)}>👥 Users</Link></li>
 
                     </>
                 )}
-                <Link to="/settings">
-    <i className="bi bi-gear"></i> ⚙ Settings
-</Link>
+               <li>
+                  <Link
+                    to="/settings"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                     ⚙ Settings
+                  </Link>
+              </li>
 
 
 
