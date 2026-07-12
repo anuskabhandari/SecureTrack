@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { FaUserCircle } from "react-icons/fa";
 export default function Topbar() {
 
     const username = localStorage.getItem("username") || "User";
@@ -69,26 +69,18 @@ export default function Topbar() {
 
                 </button>
 
-                <div className="user">
+               <div className="user">
 
-                    <div className="avatar">
+    <div className="avatar">
+        <FaUserCircle size={26} />
+    </div>
 
-                        {username.charAt(0).toUpperCase()}
+    <div className="user-info">
+        <strong>{username}</strong>
+        <small>{role}</small>
+    </div>
 
-                    </div>
-
-                    <div>
-
-                        <strong>{username}</strong>
-
-                        <br />
-
-                        <small>{role}</small>
-
-                    </div>
-
-                </div>
-
+</div>
             </div>
 
         </div>

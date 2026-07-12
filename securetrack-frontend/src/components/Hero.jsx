@@ -9,9 +9,13 @@ export default function Hero() {
           SecureTrack
         </h1>
 
-       <p
+     <p
   className="lead fw-semibold mt-4"
-  style={{ color: "#f8f9fa" }}
+  style={{
+    color: "#ffffff",
+    fontSize: "1.35rem",
+    textShadow: "1px 1px 4px rgba(0,0,0,0.4)",
+  }}
 >
   AI-powered Security Incident &<br />
   Vulnerability Management Platform

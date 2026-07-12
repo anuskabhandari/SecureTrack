@@ -376,10 +376,9 @@ align-items:flex-start;
 }
 
 .top-right{
-
-width:100%;
-justify-content:space-between;
-
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
 
 .top-right input{
@@ -450,71 +449,49 @@ box-shadow:0 10px 25px rgba(0,0,0,.05);
 }
 
 .avatar{
-
-    width:45px;
-
-    height:45px;
-
+    width:48px;
+    height:48px;
     border-radius:50%;
-
-    background:#2563eb;
-
-    color:white;
-
+    background:#eff6ff;
+    color:#2563eb;
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
-    font-size:18px;
-
-    font-weight:700;
-
-    margin-right:12px;
-
+    border:2px solid #2563eb;
+    flex-shrink:0;
 }
-
 .user{
-
     display:flex;
-
     align-items:center;
-
+    gap:12px;
+    background:#ffffff;
+    padding:10px 16px;
+    border-radius:14px;
+    border:1px solid #e5e7eb;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
 }
 
 .user strong{
-
+    display:block;
     font-size:15px;
-
+    color:#111827;
 }
 
 .user small{
-
-    color:#64748b;
-
+    color:#6b7280;
+    font-size:12px;
 }
 
 .theme-btn{
-
-    width:45px;
-
-    height:45px;
-
+    width:42px;
+    height:42px;
     border:none;
-
     border-radius:12px;
-
-    background:white;
-
+    background:#ffffff;
     cursor:pointer;
-
     font-size:18px;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
-
+    border:1px solid #e5e7eb;
     transition:.3s;
-
 }
 
 .theme-btn:hover{
@@ -656,4 +633,55 @@ body.dark-theme .logout-btn{
 
     background:#dc2626;
 
+}
+body.dark-theme .avatar{
+    background:#e2e8f0;
+    color:#0f172a;
+    border:none;
+}
+
+body.dark-theme .user{
+    background:#334155;
+    border:1px solid #475569;
+}
+
+body.dark-theme .user strong{
+    color:#ffffff;
+}
+
+body.dark-theme .user small{
+    color:#cbd5e1;
+}
+.user-info{
+    display:flex;
+    flex-direction:column;
+}
+
+.user-info strong{
+    color:#111827;
+    font-size:15px;
+    font-weight:600;
+}
+
+.user-info small{
+    color:#6b7280;
+    font-size:12px;
+}
+body.dark-theme .user{
+    background:#334155;
+    border:1px solid #475569;
+}
+
+body.dark-theme .avatar{
+    background:#1e293b;
+    color:#60a5fa;
+    border:2px solid #60a5fa;
+}
+
+body.dark-theme .user-info strong{
+    color:white;
+}
+
+body.dark-theme .user-info small{
+    color:#cbd5e1;
 }
