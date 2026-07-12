@@ -9,7 +9,7 @@ export default function Sidebar({ role }) {
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("role");
         localStorage.removeItem("username");
-        navigate("/login");
+        navigate("/", { replace: true });
 
     };
 

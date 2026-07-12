@@ -9,10 +9,13 @@ export default function Hero() {
           SecureTrack
         </h1>
 
-        <p className="lead text-secondary mt-4">
-          AI-powered Security Incident &
-          Vulnerability Management Platform
-        </p>
+       <p
+  className="lead fw-semibold mt-4"
+  style={{ color: "#f8f9fa" }}
+>
+  AI-powered Security Incident &<br />
+  Vulnerability Management Platform
+</p>
 
         <Link
           to="/register"

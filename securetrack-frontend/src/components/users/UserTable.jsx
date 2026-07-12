@@ -51,7 +51,7 @@ export default function UserTable({ users,
 
         <button
             className="btn btn-danger btn-sm"
-            onClick={() => onDelete(user.id)}
+           onClick={() =>  onDelete(user)}
         >
             Delete
         </button>
