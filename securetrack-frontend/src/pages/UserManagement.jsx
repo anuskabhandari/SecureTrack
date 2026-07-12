@@ -10,7 +10,8 @@ export default function UserManagement() {
 
     const [users, setUsers] = useState([]);
     const totalUsers = users.length;
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
     const developers = users.filter(
        user => user.role === "Developer"
     ).length;
@@ -82,17 +83,19 @@ export default function UserManagement() {
     return matchesSearch && matchesRole;
 
 });
-   const deleteUser = async (id) => {
+  const confirmDelete = (user) => {
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+};
 
-    if (!window.confirm("Delete this user?"))
-        return;
+const deleteUser = async () => {
 
     try {
 
         const token = localStorage.getItem("access");
 
         await axios.delete(
-            `http://127.0.0.1:8000/users/${id}/`,
+            `http://127.0.0.1:8000/api/users/${userToDelete.id}/`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -100,13 +103,16 @@ export default function UserManagement() {
             }
         );
 
-        toast.success("User deleted successfully");
+        toast.success("User deleted successfully.");
+
+        setShowDeleteModal(false);
+        setUserToDelete(null);
 
         fetchUsers();
 
-    } catch (error) {
+    } catch {
 
-        toast.error("Failed to delete user");
+        toast.error("Failed to delete user.");
 
     }
 
@@ -214,7 +220,7 @@ const totalPages = Math.ceil(
                     <>
                         <UserTable
                             users={currentUsers}
-                            onDelete={deleteUser}
+                            onDelete={confirmDelete}
                             onView={(user) => {
                                  setSelectedUser(user);
 
@@ -298,6 +304,66 @@ const totalPages = Math.ceil(
             }}
 
         />
+
+    )
+}
+
+   {
+    showDeleteModal && (
+
+        <div
+            className="modal fade show"
+            style={{
+                display: "block",
+                backgroundColor: "rgba(0,0,0,0.5)"
+            }}
+        >
+
+            <div className="modal-dialog">
+
+                <div className="modal-content">
+
+                    <div className="modal-header">
+
+                        <h5 className="modal-title">
+                            Delete User
+                        </h5>
+
+                    </div>
+
+                    <div className="modal-body">
+
+                        Are you sure you want to delete
+                        <strong> {userToDelete?.username}</strong>?
+
+                    </div>
+
+                    <div className="modal-footer">
+
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => {
+                                setShowDeleteModal(false);
+                                setUserToDelete(null);
+                            }}
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            className="btn btn-danger"
+                            onClick={deleteUser}
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
     )
 }
