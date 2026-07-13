@@ -21,3 +21,13 @@ db.sqlite3
 # OS
 .DS_Store
 Thumbs.db
+
+# React
+node_modules/
+dist/
+
+# Docker
+postgres_data/
+
+# Example environment file
+.env.example
