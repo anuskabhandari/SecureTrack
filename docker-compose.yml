@@ -1,11 +1,8 @@
-version: "3.9"
-
 services:
 
   db:
     image: postgres:16
     container_name: securetrack-db
-
     restart: always
 
     environment:
@@ -21,7 +18,6 @@ services:
 
   backend:
     build: ./backend
-
     container_name: securetrack-backend
 
     command: python manage.py runserver 0.0.0.0:8000
@@ -33,10 +29,27 @@ services:
       - "8000:8000"
 
     env_file:
-      - ./backend/.env.docker
+      - ./backend/.env.example
 
     depends_on:
       - db
+
+  frontend:
+    build: ./securetrack-frontend
+    container_name: securetrack-frontend
+
+    volumes:
+      - ./securetrack-frontend:/app
+      - /app/node_modules
+
+    ports:
+      - "5173:5173"
+
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
