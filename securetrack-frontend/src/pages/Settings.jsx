@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -49,6 +49,36 @@ const EMPTY_PASSWORD_FORM = {
   confirm_password: "",
 };
 
+// Maps a 0-4 strength score to a label, Bootstrap color, and fill %.
+const PASSWORD_STRENGTH_LEVELS = [
+  { label: "Too weak", color: "bg-danger", percent: 20 },
+  { label: "Weak", color: "bg-danger", percent: 40 },
+  { label: "Fair", color: "bg-warning", percent: 60 },
+  { label: "Good", color: "bg-info", percent: 80 },
+  { label: "Strong", color: "bg-success", percent: 100 },
+];
+
+function getPasswordStrength(password) {
+  if (!password) return null;
+
+  let score = 0;
+  if (password.length >= MIN_PASSWORD_LENGTH) score += 1;
+  if (password.length >= 12) score += 1;
+  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score += 1;
+  if (/\d/.test(password)) score += 1;
+  if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+  const level = Math.min(score, PASSWORD_STRENGTH_LEVELS.length - 1);
+  return PASSWORD_STRENGTH_LEVELS[level];
+}
+
+function getInitials({ first_name, last_name, username }) {
+  const first = first_name?.trim()?.[0] || "";
+  const last = last_name?.trim()?.[0] || "";
+  if (first || last) return `${first}${last}`.toUpperCase();
+  return (username?.trim()?.[0] || "?").toUpperCase();
+}
+
 export default function Settings() {
   const role = localStorage.getItem("role");
   const navigate = useNavigate();
@@ -63,6 +93,13 @@ export default function Settings() {
 
   const [profileErrors, setProfileErrors] = useState({});
   const [passwordErrors, setPasswordErrors] = useState({});
+
+  const passwordStrength = useMemo(
+    () => getPasswordStrength(passwordForm.new_password),
+    [passwordForm.new_password]
+  );
+
+  const initials = useMemo(() => getInitials(form), [form]);
 
   useEffect(() => {
     loadProfile();
@@ -189,6 +226,30 @@ export default function Settings() {
             </div>
           ) : (
             <>
+              {/* Profile Card: avatar + read-only identity summary */}
+              <div className="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
+                <div
+                  className="d-flex align-items-center justify-content-center rounded-circle bg-primary text-white fw-bold flex-shrink-0"
+                  style={{ width: 72, height: 72, fontSize: "1.5rem" }}
+                  aria-hidden="true"
+                >
+                  {initials}
+                </div>
+                <div>
+                  <div className="fs-5 fw-semibold">
+                    {form.first_name || form.last_name
+                      ? `${form.first_name} ${form.last_name}`.trim()
+                      : form.username}
+                  </div>
+                  <div className="text-muted">{form.email}</div>
+                  {form.role && (
+                    <span className="badge bg-secondary-subtle text-secondary-emphasis mt-1">
+                      {form.role}
+                    </span>
+                  )}
+                </div>
+              </div>
+
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
                   Username
@@ -352,6 +413,22 @@ export default function Settings() {
             ) : (
               <div className="form-text">
                 At least {MIN_PASSWORD_LENGTH} characters.
+              </div>
+            )}
+
+            {passwordStrength && (
+              <div className="mt-2">
+                <div className="progress" style={{ height: 6 }}>
+                  <div
+                    className={`progress-bar ${passwordStrength.color}`}
+                    role="progressbar"
+                    style={{ width: `${passwordStrength.percent}%` }}
+                    aria-valuenow={passwordStrength.percent}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  />
+                </div>
+                <div className="form-text">{passwordStrength.label}</div>
               </div>
             )}
           </div>
