@@ -11,6 +11,7 @@ export default function Register() {
      password: "",
      confirmPassword: "",
 });
+  const [success, setSuccess] = useState("");
 
   const password = form.password;
 
