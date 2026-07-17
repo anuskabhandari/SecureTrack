@@ -65,8 +65,8 @@ if (passedChecks === 5) {
       toast.success(response.data.message);
 
        setTimeout(() => {
-             navigate("/login");
-         }, 1500);
+            window.location.href = "/login";
+       }, 1500);
 
     } catch (error) {
 
