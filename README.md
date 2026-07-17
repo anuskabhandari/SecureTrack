@@ -319,13 +319,15 @@ SecureTrack/
 
 ## Developer Dashboard
 
-*Add screenshot here*
+<img width="1910" height="858" alt="Screenshot 2026-07-17 194807" src="https://github.com/user-attachments/assets/8b325e21-7d8d-4dbb-a94b-01de3db3464a" />
+
 
 ---
 
 ## User Dashboard
 
-*Add screenshot here*
+<img width="1917" height="867" alt="Screenshot 2026-07-17 195655" src="https://github.com/user-attachments/assets/348be0c4-f398-4dae-9fbf-312b598496f9" />
+
 
 
 
