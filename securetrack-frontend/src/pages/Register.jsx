@@ -11,9 +11,9 @@ export default function Register() {
      password: "",
      confirmPassword: "",
 });
-  const [success, setSuccess] = useState("");
 
   const password = form.password;
+  const navigate = useNavigate();
 
 const passwordChecks = {
     length: password.length >= 8,
@@ -65,12 +65,11 @@ if (passedChecks === 5) {
       toast.success(response.data.message);
 
        setTimeout(() => {
-            window.location.href = "/login";
-       }, 1500);
+             navigate("/login");
+         }, 1500);
 
     } catch (error) {
 
-    setSuccess(false);
 
     const data = error.response?.data;
 
