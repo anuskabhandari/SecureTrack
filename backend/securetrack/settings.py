@@ -144,9 +144,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-CORS_ALLOWED_ORIGINS = [
-    "https://secure-track-beige.vercel.app",
-]
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "https://secure-track-beige.vercel.app",
+    ]
 REST_FRAMEWORK = {
 
     "DEFAULT_AUTHENTICATION_CLASSES": (
