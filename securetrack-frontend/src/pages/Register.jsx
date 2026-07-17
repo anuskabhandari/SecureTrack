@@ -50,17 +50,17 @@ if (passedChecks === 5) {
     }
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/register/",
-        {
-            full_name: form.fullName,
-            username: form.username,
-            email: form.email,
-            password: form.password,
-            confirm_password: form.confirmPassword,
-            role: form.role,
-        }
-      );
+     const response = await axios.post(
+         `${import.meta.env.VITE_API_URL}/api/register/`,
+  {
+       full_name: form.fullName,
+       username: form.username,
+       email: form.email,
+       password: form.password,
+       confirm_password: form.confirmPassword,
+       role: form.role,
+      }
+     );
 
       toast.success(response.data.message);
 
