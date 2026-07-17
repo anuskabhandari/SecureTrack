@@ -21,7 +21,7 @@ export default function DeveloperDashboard() {
             const token = localStorage.getItem("access");
 
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/vulnerabilities/",
+                `${import.meta.env.VITE_API_URL}/api/vulnerabilities/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

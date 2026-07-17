@@ -32,7 +32,7 @@ export default function UpdateIncidentModal({
 
             await axios.put(
 
-                `http://127.0.0.1:8000/api/incidents/${incident.id}/`,
+                `${import.meta.env.VITE_API_URL}/api/incidents/${incident.id}/`,
 
                 {
 

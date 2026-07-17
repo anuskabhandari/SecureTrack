@@ -45,7 +45,7 @@ export default function UserManagement() {
             const token = localStorage.getItem("access");
 
             const response = await axios.get(
-                "http://127.0.0.1:8000/users/",
+                `${import.meta.env.VITE_API_URL}/users/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -95,7 +95,8 @@ const deleteUser = async () => {
         const token = localStorage.getItem("access");
 
         await axios.delete(
-            `http://127.0.0.1:8000/api/users/${userToDelete.id}/`,
+            `${import.meta.env.VITE_API_URL}/users/${userToDelete.id}/`,
+
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

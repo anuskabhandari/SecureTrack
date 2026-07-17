@@ -17,7 +17,7 @@ export default function Landing() {
     useEffect(() => {
 
         axios
-            .get("http://127.0.0.1:8000/api/dashboard/public/dashboard")
+            .get(`${import.meta.env.VITE_API_URL}/api/dashboard/public/dashboard`)
             .then((response) => {
 
                 console.log(response.data);

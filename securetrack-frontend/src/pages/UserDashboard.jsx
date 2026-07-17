@@ -21,13 +21,13 @@ export default function UserDashboard() {
             const token = localStorage.getItem("access");
 
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/vulnerabilities/",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+              `${import.meta.env.VITE_API_URL}/api/vulnerabilities/`,
+      {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+              }
+              );
 
             setVulnerabilities(response.data);
 

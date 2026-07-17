@@ -23,7 +23,7 @@ export default function AnalyzeWithAIModal({
 
             const response = await axios.post(
 
-                "http://127.0.0.1:8000/api/ai/analyze-vulnerability/",
+                `${import.meta.env.VITE_API_URL}/api/ai/analyze-vulnerability/`,
 
                 {
                     vulnerability_id: vulnerability.id,

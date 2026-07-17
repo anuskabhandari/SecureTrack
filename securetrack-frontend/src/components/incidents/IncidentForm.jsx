@@ -47,7 +47,7 @@ export default function IncidentForm({ incident,onSuccess, }) {
             const token = localStorage.getItem("access");
 
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/vulnerabilities/",
+                 `${import.meta.env.VITE_API_URL}/api/vulnerabilities/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ export default function IncidentForm({ incident,onSuccess, }) {
             const token = localStorage.getItem("access");
 
             const response = await axios.get(
-                "http://127.0.0.1:8000/api/developers/",
+                 `${import.meta.env.VITE_API_URL}/api/developers/`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -124,7 +124,7 @@ export default function IncidentForm({ incident,onSuccess, }) {
 
     await axios.put(
 
-        `http://127.0.0.1:8000/api/incidents/${incident.id}/`,
+        `${import.meta.env.VITE_API_URL}/api/incidents/${incident.id}/`,
 
         {
             title,
@@ -150,7 +150,7 @@ export default function IncidentForm({ incident,onSuccess, }) {
 
     await axios.post(
 
-        "http://127.0.0.1:8000/api/incidents/",
+        `${import.meta.env.VITE_API_URL}/api/incidents/`,
 
         {
             title,
